@@ -1,0 +1,181 @@
+﻿@page "/issue/{ProjectCode}-{IssueId:int}"
+@using System.Globalization
+@using Microsoft.AspNetCore.Html
+@using Website.Data
+@using Website.Model
+@if (IssueId == -1)
+{
+    return;
+}
+@if (_selectedIssue == null)
+{
+    <h1>Задачи не существует, или доступ к ней ограничен.</h1>
+    return;
+}
+
+<PageTitle>[@(_project.ProjectCode)-@(_selectedIssue.IssueId)] @(_selectedIssue.Title)</PageTitle>
+
+<div class="container">
+    <img src="/static/projects/@(_project.ProjectCode).png" class="icon">
+    <div class="text">
+        <p class="title">
+            <a href="/project/@(_project.ProjectCode)/issues">@(_project.ProjectName)</a> / <a href="/issue/@(_project.ProjectCode)-@(_selectedIssue.IssueId)">@(_selectedIssue.Project.ProjectCode)-@(_selectedIssue.IssueId)</a>
+        </p>
+        <div class="header-controls">
+            <p class="subtitle">@(_selectedIssue.Title)</p>
+            <a href="/issue/@(_project.ProjectCode)-@(_selectedIssue.IssueId)/edit" class="edit-button">
+                Редактирование
+            </a>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; height: 100vh; overflow: hidden;">
+    <div id="left" style="flex: 4; overflow-y: auto; border-right: 1px solid #ccc; padding: 10px;">
+        <div style="margin-left: 20px">
+            <Container BackgroundColor="#213a9c" TitleColor="#fff" Title="Детали задачи" Width="calc(100% - 20px)">
+                <table>
+                    <tr>
+                        <td style="color: #7a7a7a">Тип:</td>
+                        <td><img src="@(_selectedIssue.IssueType.GetIssueTypeIconPath())" height="16px" width="16px" /> @(_selectedIssue.IssueType.GetIssueTypeName())</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #7a7a7a">Состояние:</td>
+                        <td>@(_selectedIssue.Status.GetIssueStatusName())</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #7a7a7a">Решение:</td>
+                        <td>@(_selectedIssue.Solution.GetIssueSolutionName())</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #7a7a7a">Исправлено в версии:</td>
+                        <td>
+                            @if (_selectedIssue.FixedInVersion != null)
+                            {
+                                @_selectedIssue.FixedInVersion.Name
+                            }
+                            else
+                            {
+                                <i>Не исправлено</i>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color: #7a7a7a">Затронуто в версиях:</td>
+                        <td>
+                            @if (_selectedIssue.AffectedVersionIds != null)
+                            {
+                                @(string.Join(", ", _selectedIssue.AffectedVersionIds.Select(s => Database.Versions.First(v => v.Id == s).Name)))
+                            }
+                            else
+                            {
+                                <i>Не указано</i>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color: #7a7a7a">Статус подтверждения:</td>
+                        <td>@(_selectedIssue.ConfirmationStatus.GetIssueConfirmation())</td>
+                    </tr>
+                </table>
+            </Container>
+        </div>
+        <div style="margin-left: 20px">
+            @if (!string.IsNullOrWhiteSpace(_selectedIssue.Description))
+            {
+                <Container BackgroundColor="#213a9c" TitleColor="#fff" Title="Описание" Width="calc(100% - 20px)">
+                    <p>
+                        <Markdown MarkdownString="@(_selectedIssue.Description.Replace("\\n", ""))" />
+                    </p>
+                </Container>
+            }
+            else
+            {
+                <p style="color: gray"><i>Описание задачи не задано.</i></p>
+            }
+        </div>
+        @if (_selectedIssue.AttachedFiles is { Count: > 0 })
+        {
+            <div style="margin-left: 20px;">
+                <Container Overflow="auto" BackgroundColor="#213a9c" TitleColor="#fff" Title="Прикреплённые файлы" Width="calc(100% - 20px)">
+                    <div style="width: 100%; height: 100%; display: flex;flex-wrap: wrap;gap: 10px;">
+                        @foreach (var file in _selectedIssue.AttachedFiles ?? [])
+                        {
+                            <div>
+                                <FileBadge Guid="@file" />
+                            </div>
+                        }
+                    </div>
+                </Container>
+            </div>
+        }
+    </div>
+    <div id="right" style="flex: 1; overflow-y: auto; min-width: fit-content; padding: 10px;">
+        <Container BackgroundColor="#213a9c" TitleColor="#fff" Width="100%" Title="Пользователи">
+            <table style="border-collapse: separate;border-spacing: 0 5px; margin-right: 10px">
+                <tr>
+                    <td>Автор:</td>
+                    <td><AccountBadge User="_selectedIssue.UserCreated" /></td>
+                </tr>
+                <tr>
+                    <td>Исполнитель:</td>
+                    <td>
+                        @if (_selectedIssue.UserAssigned != null)
+                        {
+                            <AccountBadge User="_selectedIssue.UserAssigned" />
+                        }
+                        else
+                        {
+                            @if (_currentUser != null)
+                            {
+                                <a class="assign-self" @onclick="BecomeAssignee"><i @onmouseenter='() => _message = "Стать исполнителем?"' @onmouseleave='() => _message = "Не назначен"'>@_message</i> </a>
+                            }
+                            else
+                            {
+                                <i>Не назначен</i>
+                            }
+                        }
+                    </td>
+                </tr>
+            </table>
+        </Container>
+        <p>Создано: @(_selectedIssue.CreatedAt.ToString("G", new CultureInfo("ru-RU")))</p>
+        @if (_selectedIssue.UpdatedAt != null)
+        {
+            <p>Обновлено: @(_selectedIssue.UpdatedAt?.ToString("G", new CultureInfo("ru-RU")))</p>
+        }
+    </div>
+</div>
+@functions
+{
+    [Parameter]
+    public int IssueId { get; set; }
+    [Parameter]
+    public string ProjectCode { get; set; }
+    [Inject]
+    public DatabaseContext Database { get; set; }
+    [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
+    private IssueModel? _selectedIssue;
+    private ProjectModel? _project;
+    private string _message = "Не назначен";
+    private UserModel? _currentUser;
+    protected override void OnParametersSet()
+    {
+        _selectedIssue = Database.Issues
+            .Include(i => i.UserCreated)
+            .Include(i => i.UserAssigned)
+            .Include(i => i.Project)
+            .Include(i => i.FixedInVersion)
+            .FirstOrDefault(i =>
+                i.IssueId == IssueId
+                && i.Project!.ProjectCode.ToLower() == ProjectCode.ToLower());
+        _project = _selectedIssue?.Project;
+        HttpContextAccessor.HttpContext.Request.TryAuthenticate(out _currentUser);
+    }
+    private void BecomeAssignee()
+    {
+        _selectedIssue!.UserAssignedId = _currentUser!.Id;
+        Database.SaveChanges();
+        StateHasChanged();
+    }
+}

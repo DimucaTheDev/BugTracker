@@ -1,0 +1,10 @@
+﻿<form action="@Endpoint" method="post">
+    <span>
+        <input type="submit" value="@Text" />
+    </span>
+</form>
+
+@code {
+    [Parameter] public string Endpoint { get; set; } = "/";
+    [Parameter] public string Text { get; set; } = "Endpoint Test";
+}

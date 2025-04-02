@@ -1,0 +1,139 @@
+﻿@page "/projects"
+@using Microsoft.AspNetCore.Html
+@using Website.Blazor.Layout
+@using Website.Data
+@using Website.Model
+@layout Layout.MainLayout
+
+<PageTitle>Список проектов</PageTitle>
+
+@if (!DbContext.Projects.Any())
+{
+    <h1 class="no-projects-title"><b>Нет проектов для отображения.</b></h1>
+    <h3 class="no-projects-description">Создайте новый проект на странице <a href="/admin">Администрирования</a>.</h3>
+}
+else
+{
+    <h5>Все Проекты - @(_searchCategory == 0 ? "Все Категории" : DbContext.ProjectCategories.First(s => s.Id == _searchCategory).Name)</h5>
+    <input style="margin-top: 10px; margin-bottom: 30px" type="text" placeholder="Поиск" @oninput="e => { _searchName = e.Value?.ToString()!; }"/>
+    <br/>
+    <div>
+        Выбрать Категорию:
+        <select @bind="_searchCategory">
+            <option value="">All Categories</option>
+            @foreach (var category in DbContext.ProjectCategories.Where(s => s.Id != 0))
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+    <br/>
+    <table>
+        <thead>
+        <tr style="background-color: #d5d5d5; cursor: pointer">
+            <th @onclick='() => SortBy("ProjectName", s => s.ProjectName)'>
+                @($"Проект {(_currentSortColumn == "ProjectName" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+            </th>
+            <th @onclick='() => SortBy("ProjectCode", s => s.ProjectCode)'>
+                @($"Код {(_currentSortColumn == "ProjectCode" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+            </th>
+            <th @onclick='() => SortBy("ManagerUser", s => s.ManagerUser?.Username)'>
+                @($"Проектный Менеджер {(_currentSortColumn == "ManagerUser" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+            </th>
+            <th @onclick='() => SortBy("Category", s => s.Category?.Name)'>
+                @($"Категория {(_currentSortColumn == "Category" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+            </th>
+            <th @onclick='() => SortBy("ProjectUrl", s => s.ProjectUrl)'>
+                @($"URL Проекта {(_currentSortColumn == "ProjectUrl" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+            </th>
+        </tr>
+        </thead>
+
+        @{
+            var l = DbContext.Projects
+                .Include(projectModel => projectModel.Category)
+                .ToList()
+                .Where(s =>
+                    /*  Project Search ---> */s.ProjectName.ToLower().Contains(_searchName.ToLower()) && (_searchCategory == 0 || s.Category?.Id == _searchCategory))
+                .ToList();
+            l.Sort(_comparison);
+        }
+        @foreach (var project in l)
+        {
+            var projectProjectUrl = project.ProjectUrl;
+
+            <tr>
+                <th>
+                    <a href="/project/@project.ProjectCode" style="text-decoration: none">
+                        @{
+                            var path = $"static/projects/{project.ProjectCode}.png";
+                            if (File.Exists(path))
+                            {
+                                <img src="/@path" class="icon"/>
+                            }
+                            else
+                            {
+                                @*No Icon*@
+                                <span style="margin-right: 40px"></span>
+                            }
+                        }
+                        @project.ProjectName
+                    </a>
+                </th>
+                <th>@project.ProjectCode</th>
+                @{
+                    var id = project.ManagerUserId;
+                    var user = DbContext.Users
+                        .Include(s => s.UserRank)
+                        .FirstOrDefault(u => u.Id == id);
+                }
+                <th><AccountBadge User=user/></th>
+                <th>
+                    <span class="@(project.Category?.Id == 0 ? "grayed" : "")">@project.Category?.Name</span>
+                </th>
+                <th>
+                    @if (string.IsNullOrWhiteSpace(projectProjectUrl))
+                    {
+                        <span class="grayed">Нет URL Проекта</span>
+                    }
+                    else
+                    {
+                        <a href="@projectProjectUrl">
+                            @projectProjectUrl
+                        </a>
+                    }
+                </th>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [Inject]
+    private DatabaseContext DbContext { get; set; } = default!;
+
+    private string _searchName = "";
+    private uint _searchCategory = 0;
+    private string? _currentSortColumn = null;
+    private bool _isSortAscending = true;
+    private Comparison<ProjectModel> _comparison = (_, _) => 0;
+
+    private void SortBy(string column, Func<ProjectModel, string?> keySelector)
+    {
+        if (_currentSortColumn == column)
+        {
+            _isSortAscending = !_isSortAscending; // инвертируем направление
+        }
+        else
+        {
+            _currentSortColumn = column;
+            _isSortAscending = true; // по умолчанию по возрастанию
+        }
+
+        _comparison = (s1, s2) =>
+        {
+            var result = String.Compare(keySelector(s1), keySelector(s2), StringComparison.OrdinalIgnoreCase);
+            return _isSortAscending ? result : -result;
+        };
+    }
+}

@@ -1,0 +1,35 @@
+﻿@page "/user/{Username}"
+@using Website.Data
+@using Website.Model
+@inject DatabaseContext Database
+
+@if (user == null)
+{
+    <h1>User not found</h1>
+}
+else
+{
+    var selected = $"static/useravatars/{user!.Uuid:N}.png";
+    var avatarPath = File.Exists(selected) ? selected : "static/useravatars/unknown.png";
+
+    <div class="profile-card">
+        <img class="avatar" style="height: 150px; width: 150px" src="/@avatarPath" alt="Avatar">
+        <h1>@user.ToString()</h1>
+        <p><strong>Username:</strong> @user.Username</p>
+        @*<p><strong>Email:</strong> @(user.Email ?? "Hidden")</p>*@
+        <p><strong>Rank:</strong> <AccountBadge ForceShowPrefix="true" ShowName="false" ShowAvatar="false" User="@user" /></p>
+        <p><strong>Bot:</strong> @(user.IsBot ? "🤖 Yes" : "👤 No")</p>
+    </div>
+} 
+
+@code {
+    [Parameter] public string Username { get; set; }
+    private UserModel? user;
+
+    protected override void OnParametersSet()
+    {
+        user = Database.Users
+            .Include(u => u.UserRank)
+            .FirstOrDefault(u => u.Username.ToLower() == Username.ToLower());
+    }
+}

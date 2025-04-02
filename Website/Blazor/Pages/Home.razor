@@ -1,0 +1,11 @@
+﻿@page "/"
+@using Website.Data
+@inject NavigationManager nav
+<PageTitle>BugTracker - Home Page</PageTitle>
+@code{
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(!string.IsNullOrWhiteSpace(Config.Instance.MainRedirectTo) && firstRender) nav.NavigateTo(Config.Instance.MainRedirectTo);
+    }
+}
+

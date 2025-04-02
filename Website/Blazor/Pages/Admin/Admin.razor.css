@@ -1,0 +1,112 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #002366;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+    height: 2px;
+    background: #ddd;
+    margin: 20px 0;
+}
+
+.btn {
+    background: #002366;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn:hover {
+        background: #001a4d;
+    }
+
+
+th {
+    padding-left: 10px;
+    height: 36px;
+    font-size: 15px
+}
+
+.grayed {
+    color: gray;
+    font-style: italic;
+}
+
+tr {
+    border-bottom: 1px solid #c7c7c7;
+    border-top: 1px solid #c7c7c7;
+    border-collapse: collapse;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.pencil {
+    opacity: 0.3;
+}
+
+    .pencil:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .pencil a {
+        text-decoration: none;
+    }
+
+
+.add-project-button {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark text color */
+    border: 2px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 5px 10px;
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 10px 0 10px;
+}
+
+    .add-project-button:hover {
+        background-color: #d0d0d0; /* Darker gray when hovered */
+        border-color: #888; /* Darker border on hover */ 
+    }
+
+    .add-project-button:focus {
+        outline: none; /* Remove the focus outline */
+    }

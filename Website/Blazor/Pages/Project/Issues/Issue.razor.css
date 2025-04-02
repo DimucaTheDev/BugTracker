@@ -1,0 +1,79 @@
+﻿.container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px; /* Сделаем отступы вместо margin-left */
+    margin-top: 15px;
+    margin-bottom: 30px;
+    width: 100%; /* Чтобы не выходило за границы */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+.icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Заполняет доступное пространство */
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 24px;
+    margin: 0;
+}
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Чтобы элементы не сдвигались */
+}
+
+.edit-button {
+    padding: 5px 10px;
+    border: 2px solid #213a9c;
+    color: #213a9c;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    white-space: nowrap; /* Чтобы текст в кнопке не переносился */
+}
+
+.edit-button:hover {
+    background-color: #213a9c;
+    color: white;
+}
+
+@keyframes blink-underline {
+    0% {
+        text-decoration: underline;
+    }
+
+    50% {
+        text-decoration: none;
+    }
+
+    100% {
+        text-decoration: underline;
+    }
+}
+
+.assign-self {
+    margin-left: 5px;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+    animation: blink-underline 1s infinite;
+    color: var(--bs-blue)
+}

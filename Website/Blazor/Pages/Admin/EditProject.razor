@@ -1,0 +1,121 @@
+﻿@page "/admin/EditProject/{ProjectCode}"
+@using Microsoft.AspNetCore.Http.Extensions
+@using Website.Data
+@using Website.Model
+@using Website.Blazor.Pages
+@attribute [Auth]
+@if (!Database.Issues
+  .Include(s => s.Project)
+  .Any(s => s.Project!.ProjectCode == ProjectCode))
+{
+    <NotFoundPage />
+    return;
+}
+
+<div class="flex">
+    <div class="center">
+        <h3 class="center-text">
+            Редактирование Проекта <b>@(_project.ProjectName)</b>
+        </h3>
+        <div class="content" style="left: 50%">
+            <div class="box" style="width: 100%">
+                @*<form method="post" id="login_form" action="/api/projects/edit">*@
+
+                <label for="name">Заголовок</label>
+                <input type="text" id="name" name="name" @bind="title">
+
+                <label for="code">Код</label>
+                <input type="text" pattern="[A-Z]{1,20}" title="Введите от 1 до 20 заглавных латинских букв" id="code" name="code" @bind="code">
+
+                <label for="description">Описание проекта</label>
+                <textarea placeholder="Краткое описание проекта" style="height: 35px" id="description" name="description" @bind="description"></textarea>
+
+                <div class="boxie">
+                    <label for="small">Маленький логотип</label>
+                    <InputFile OnChange="(e) => SetSmallIcon(e)" AdditionalAttributes='new Dictionary<string, object> { { "class", "styled-button" }, { "id", "small" } }' />
+                    <div class="image-text-container">
+                        <img src="@smallicon" class="image" />
+                        <span class="text">@title</span>
+                    </div>
+
+                    <hr />
+
+                    <label for="wide">Широкий логотип</label>
+                    <InputFile OnChange="SetWideIcon" AdditionalAttributes='new Dictionary<string, object> { { "class", "styled-button" }, { "id", "wide" } }' />
+                    <div class="image-container">
+                        <img src="@wideicon" class="wide-image" />
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <button type="button" style="left: 0" @onclick='() => { Navigation.NavigateTo($"/admin"); }'>Отменить</button>
+                    <button type="button" style="left: 0" @onclick='Preview'>Предпросмотр</button>
+                    <button type="submit" @onclick="ApplySettings">Сохранить</button>
+                </div>
+                <p id="login_error" style="color: red; text-align: center"></p>
+                @*</form>*@
+            </div>
+            @*<script>post_login_form();</script>*@
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public required string ProjectCode { get; set; }
+    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
+    [Inject] public required NavigationManager Navigation { get; set; }
+    [Inject] public required DatabaseContext Database { get; set; }
+    [Inject] public required IJSRuntime JSRuntime { get; set; }
+    private ProjectModel _project = null!;
+
+    string title, code, description, smallicon, wideicon;
+
+    void ApplySettings()
+    {
+        
+    }
+
+    void Preview()
+    {
+        // window.openNewWindow("http://localhost:5230/project/ALPHA?p-description=Hello World&p-name=Test Prohect!&p-version=v3.0", 1200, 600)
+        JSRuntime.InvokeVoidAsync("window.openNewWindow", $"/project/{ProjectCode}?p-name={Uri.EscapeDataString(title)}&p-description={Uri.EscapeDataString(description)}&p-wide={Uri.EscapeDataString(wideicon)}", 1200, 600);
+    }
+    private async Task SetSmallIcon(InputFileChangeEventArgs obj)
+    {
+        var file = obj.File;
+        using var ms = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(ms);
+        smallicon = $"data:image/{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+    }
+    private async Task SetWideIcon(InputFileChangeEventArgs obj)
+    {
+        var file = obj.File;
+        using var ms = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(ms);
+        wideicon = $"data:image/{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+    }
+
+    protected override void OnParametersSet()
+    {
+        _project = Database.Projects.FirstOrDefault(s => s.ProjectCode == ProjectCode)!;
+        smallicon = $"/static/projects/{_project.ProjectCode}.png";
+        wideicon = $"/static/wideprojects/{_project.ProjectCode}.png";
+        title = _project.ProjectName;
+        code = _project.ProjectCode;
+        description = _project.Description ?? "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var context = HttpContextAccessor.HttpContext;
+        if (context == null || !context.Request.TryAuthenticate(out _))
+        {
+            Navigation.NavigateTo($"/login?redir=/admin/EditProject/{ProjectCode}", true);
+            return;
+        }
+    }
+
+
+}

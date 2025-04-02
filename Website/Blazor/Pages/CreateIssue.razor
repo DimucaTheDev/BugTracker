@@ -1,0 +1,147 @@
+﻿@page "/createIssue"
+@using Website.Blazor.Components
+@using Website.Blazor.Layout
+@using Website.Data
+@using Website.Model
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+@attribute [Auth]
+<div class="flex">
+    <div class="center">
+        <h3 class="center-text">
+            Создание Задачи
+        </h3>
+        <div class="content" style="left: 50%">
+            <div class="box" style="width: 100%">
+                <form method="post" id="login_form" action="/api/issues/create">
+                    <label for="projectCode">Проект</label>
+                    <select name="projectCode" @onchange="RefreshTemplate" id="projectCode">
+                        @foreach (var p in Database.Projects)
+                        {
+                            <option value="@p">[@p.ProjectCode] @p.ProjectName</option>
+                        }
+                    </select>
+
+                    <label for="issueType">Тип задачи</label>
+                    <select name="issueType" id="issueType">
+                        @foreach (var p in Enum.GetValues<IssueType>().Except([IssueType.None]))
+                        {
+                            <option value="@p">@p.GetIssueTypeName()</option>
+                        }
+                    </select>
+
+                    <label for="targetversions">Затронутые версии</label>
+                    <DropdownCheckbox Title="@selectedVersionsTitle" Items="@selectedVersions" OnSelectedChanged="Callback" />
+
+                    <label for="title">Заголовок</label>
+                    <input type="text" id="title" name="title">
+
+                    <label for="description">Описание задачи (<span class="clickme" @onclick="() => previewDescription = !previewDescription">@(previewDescription ? "Редактирование" : "Превью")</span>)</label>
+                    @if (previewDescription)
+                    {
+                        <div class="preview">
+                            <Markdown MarkdownString="@description" />
+                        </div>
+                    }
+                    else
+                    {
+                        <textarea placeholder="Здесь поддерживается Markdown" id="description" name="description" @bind="description"></textarea>
+                    }
+                    <label for="files">Прикрепить файлы</label>
+                    <input type="file" multiple="" id="files" name="files">
+
+                    <div class="actions">
+                        <button type="submit">Создать задачу</button>
+                    </div>
+                    <p id="login_error" style="color: red; text-align: center"></p>
+                </form>
+            </div>
+            <script>post_login_form();</script>
+        </div>
+    </div>
+</div>
+@code {
+    [Inject] DatabaseContext Database { get; set; }
+    string projectCode;
+    string description;
+    bool previewDescription = false;
+    List<VersionModel> versions = new();
+    List<DropdownItem> selectedVersions = new(); // Хранение выбранных версий
+
+    protected override void OnParametersSet()
+    {
+        projectCode = Database.Projects.FirstOrDefault()!.ProjectCode;
+        if (Config.Instance.Templates.TryGetValue(projectCode ?? "", out var value))
+        {
+            description = value;
+        }
+
+        versions = Database.Versions
+            .Include(s => s.Project)
+            .Where(s => s.Project!.ProjectCode == projectCode)
+            .OrderByDescending(s => s.Priority).ToList();
+
+        // Обновление списка элементов без сброса выбора
+        var newItems = versions.Select(s => new DropdownItem { Text = s.Name }).ToList();
+        foreach (var item in newItems)
+        {
+            item.Selected = selectedVersions.Any(v => v.Text == item.Text);
+        }
+        selectedVersions = newItems;
+
+        UpdateSelectedVersionsTitle();
+        base.OnParametersSet();
+    }
+    private string selectedVersionsTitle = "Выбрать...";
+
+    private void UpdateSelectedVersionsTitle()
+    {
+        var selectedCount = selectedVersions.Count(s => s.Selected);
+        selectedVersionsTitle = selectedCount > 0 ? $"{string.Join(", ", selectedVersions.Where(s => s.Selected).Select(s => s.Text))}" : "Выберите...";
+        StateHasChanged();
+    }
+
+    void RefreshTemplate(ChangeEventArgs e)
+    {
+        projectCode = e.Value!.ToString() ?? "";
+        if (Config.Instance.Templates.TryGetValue(projectCode, out var value))
+        {
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                description = value;
+            }
+        }
+        versions = Database.Versions
+            .Include(s => s.Project)
+            .Where(s => s.Project!.ProjectCode == projectCode)
+            .OrderByDescending(s => s.Priority).ToList();
+        
+        // Аналогично обновляем список без сброса выбора
+        var newItems = versions.Select(s => new DropdownItem { Text = s.Name }).ToList();
+        // foreach (var item in newItems)
+        // {
+        //     item.Selected = selectedVersions.Any(v => v.Text == item.Text);
+        // }
+        selectedVersions = newItems;
+
+        UpdateSelectedVersionsTitle();
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var context = HttpContextAccessor.HttpContext;
+        if (context == null || !context.Request.TryAuthenticate(out _))
+        {
+            Navigation.NavigateTo("/login?redir=/createIssue", true);
+            return;
+        }
+    }
+
+    private void Callback(List<DropdownItem> obj)
+    {
+        selectedVersions = obj;
+        UpdateSelectedVersionsTitle();
+        StateHasChanged();
+    }
+
+}

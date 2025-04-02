@@ -1,0 +1,30 @@
+﻿@using System.Web
+@using Microsoft.EntityFrameworkCore.Metadata
+@inject NavigationManager nav
+@{
+    var q = HttpUtility.ParseQueryString(new Uri(nav.Uri).Query);
+}
+<div class="login-box" style="width: 100%">
+    <form method="post" id="login_form" action="/api/auth/login">
+        <label for="username">Имя пользователя</label>
+        <input type="text" id="username" name="username">
+
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password">
+
+        <div>
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember" style="display: inline;">Запомнить это устройство</label>
+        </div>
+
+        <div class="actions">
+            <button type="submit">Войти</button>
+            <button type="button" @onclick='() => { nav.NavigateTo($"/register?redir={q["redir"]??"/"}"); }' >Зарегистр.</button>
+        </div>
+        <p id="login_error" style="color: red; text-align: center"></p>
+        <a href="/restore">Забыли пароль?</a>
+    </form>
+</div>
+
+<script>post_login_form();</script>
+ 

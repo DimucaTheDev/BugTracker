@@ -1,0 +1,61 @@
+﻿@page "/overview"
+@using Website.Data
+@using Website.Model
+@inject HttpClient httpClient
+@inject IJSRuntime js
+@inject NavigationManager navigator
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    UserModel? m = null;
+    if (httpContextAccessor.HttpContext != null)
+        httpContextAccessor.HttpContext?.Request.TryAuthenticate(out m);
+}
+@if (httpContextAccessor.HttpContext != null && !httpContextAccessor.HttpContext.User.Identity!.IsAuthenticated) //TODO: if user is not authorized, show login container
+{
+    <Container Title="Авторизация">
+        <div style="margin-left: 50px; top: 10px; width: fit-content">
+            <LoginForm />
+        </div>
+    </Container>
+}
+<PageTitle>Обзор</PageTitle>
+<Container Title="Обзор" BackgroundColor="#c60" TitleColor="#fff">
+    <Markdown MarkdownString="@Config.Instance.OverviewMarkdown" />
+</Container>
+@*
+<Container Title="Some tests (нажми на меня!)" BackgroundColor="#000" Hidden="true">
+    <Container Title="Каждый" BackgroundColor="#f00" TitleColor="#000">
+        <Container Title="охотник" BackgroundColor="#f60" TitleColor="#000">
+            <Container Title="желает" BackgroundColor="#ff0" TitleColor="#000">
+                <Container Title="знать" BackgroundColor="#0f0" TitleColor="#000">
+                    <Container Title="где" BackgroundColor="#0ff" TitleColor="#000">
+                        <Container Title="сидит" BackgroundColor="#00f" TitleColor="#fff">
+                            <Container Title="фазан" BackgroundColor="#8B00FF" TitleColor="#fff">
+                                @code
+                                {
+                                    private string cookie;
+                                    private string cookiev;
+                                    [Inject] public IHttpContextAccessor ContextAccessor { get; set; }
+                                }
+                                <AccountBadge User=m />
+                                <form method="post" action="/debug/setc">
+                                    <input name="n" @bind="cookie" />
+                                    <input name="v" @bind="cookiev" />
+                                    <button type="submit">Save</button>
+                                </form>
+                                <ApiPostButton Endpoint="/debug/reloadConfig" Text="Reload config" />
+                                <ApiPostButton Endpoint="/test/login/DimucaTheDev" Text="Get JWT Token(15 secs)" />
+                                <ApiPostButton Endpoint="/test/jwt" Text="Get jwt info" />
+                                <ApiPostButton Endpoint="/test/auth" Text="Test Auth" />
+                                <ApiPostButton Endpoint="/test/setcookie" Text="Set Cookie" />
+                                <ApiPostButton Endpoint="/test/getcookie" Text="Get Cookie" />
+                                <ApiPostButton Endpoint="/test/logout" Text="Log out" />
+                            </Container>
+                        </Container>
+                    </Container>
+                </Container>
+            </Container>
+        </Container>
+    </Container>
+</Container>
+*@

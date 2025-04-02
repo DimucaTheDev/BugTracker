@@ -1,0 +1,13 @@
+﻿@*Shows content if in dev status. may be useful for TODOs or some crit info*@
+@if (Program.IsDev)
+{
+    <Container BackgroundColor="#00954b" Title=@Title Width="fit-content" ChildContent=@ChildContent Hidden=@Hidden />
+}
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public string Title { get; set; } = "Dev note";
+    [Parameter]
+    public bool Hidden { get; set; }
+}

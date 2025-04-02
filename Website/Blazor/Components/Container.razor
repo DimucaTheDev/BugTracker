@@ -1,0 +1,48 @@
+﻿@using System.ComponentModel
+@using System.Drawing
+<div id="@Id" class="con" style="outline: @BackgroundColor solid 2px; width: @Width; max-width: 100%; @MainDivStyleOverride">
+    <div @onclick="() => _hidden = !_hidden" style="background-color: @BackgroundColor; height: 28px; width: 100%; cursor: pointer ">
+        <div>
+            <div>
+                <p style="color: @TitleColor; margin-left: 5px; font-size: 17px; font-family: 'zen'" class="noselect">@Title</p>
+            </div>
+        </div>
+        @*<div style="text-align: right">
+        <i class="bi @(!_hidden ? "bi-dash" : "bi-plus-lg")" style="cursor: pointer; margin-right: 10px; color: white" @onclick="() => _hidden = !_hidden"></i>
+        </div>*@
+    </div>
+
+    <div style="height: 100%; margin-left: 10px; padding-bottom: 10px;overflow: @(Overflow)">
+        @if (!_hidden)
+        {
+            <div style="width: 97%; margin-top: 10px">
+                @ChildContent
+            </div>
+        }
+    </div>
+
+</div>
+@code {
+    #pragma warning disable 414 //баг
+    private bool _resize = false;
+    private bool _hidden = false;
+
+    [Parameter] 
+    public string? MainDivStyleOverride { get; set; }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public string? BackgroundColor { get; set; } = "#ba1e2b";
+    [Parameter]
+    public string? Title { get; set; } = "";
+    [Parameter]
+    public string? TitleColor { get; set; } = "#fff";
+    [Parameter]
+    public string? Width { get; set; } = "100%";
+    [Parameter]
+    public string? Id { get; set; } = Random.Shared.Next().ToString();
+    [Parameter]
+    public bool Hidden { get => _hidden; set => _hidden = value; }
+    [Parameter]
+    public string? Overflow { get; set; }
+}

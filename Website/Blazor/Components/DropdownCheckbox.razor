@@ -1,0 +1,94 @@
+﻿@inject IJSRuntime JS
+@using Website.Data
+@implements IAsyncDisposable
+
+<div class="dropdown" @ref="DropdownRef">
+    <button id="targetversions" type="button" @onclick="ToggleDropdown" style="background-color: #fff;color: black; padding: 0; padding-left: 5px" class="dropbtn">@Title</button>
+    <div class="dropdown-content" style="display: @(IsOpen ? "block" : "none")">
+        @foreach (var item in Items)
+        {
+            <label class="dropdown-item" @key="item">
+                <input type="checkbox" checked="@item.Selected" @onchange="(e) => OnSelectionChanged(item, e)" />
+                @item.Text
+            </label>
+        }
+    </div>
+</div>
+
+@* Скрытые инпуты для отправки данных *@
+@foreach (var item in Items.Where(i => i.Selected))
+{
+    <input type="hidden" name="selectedItems" value="@item.Text" />
+}
+
+@code {
+    [Parameter]
+    public string Title
+    {
+        get => field;
+        set
+        {
+            field = value; 
+        }
+    } = "Выберите...";
+    [Parameter] public List<DropdownItem> Items { get; set; } = new();
+    [Parameter] public EventCallback<List<DropdownItem>> OnSelectedChanged { get; set; }
+
+    private bool IsOpen = false;
+    private ElementReference DropdownRef;
+    private IJSObjectReference? JSModule;
+
+    private async Task ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+        if (IsOpen)
+        {
+            await JS.InvokeVoidAsync("registerDropdown", DropdownRef, DotNetObjectReference.Create(this));
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnSelectionChanged(DropdownItem item, ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out bool isChecked))
+        {
+            item.Selected = isChecked;
+        }
+        UpdateTitle();
+        await OnSelectedChanged.InvokeAsync(Items);
+    }
+
+    private void UpdateTitle()
+    {
+        int selectedCount = Items.Count(i => i.Selected);
+        Title = selectedCount > 0 ? $"{string.Join(", ", Items.Where(s => s.Selected).Select(s => s.Text))}" : "Выберите...";
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task CloseDropdown()
+    {
+        IsOpen = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "/js/dropdown.js");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null)
+        {
+            try
+            {
+                await JSModule.DisposeAsync();
+            }
+            catch { }
+        }
+    }
+}

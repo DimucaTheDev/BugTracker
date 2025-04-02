@@ -1,0 +1,73 @@
+﻿@using Website.Blazor.Pages.Users
+@using Website.Data
+@using Website.Model
+@if (User is not null && _rank is not null)
+{
+    <div class="badge-container">
+        <a class="link" href="/user/@User?.Username" style="color: #@(_rank?.ForegroundColor)">
+            <span class="bg" style="background-color: #@(_rank?.BackgroundColor); border: 5px solid #@(_rank?.BackgroundColor); color: #@(_rank?.ForegroundColor)">
+                @if (ShowAvatar)
+                {
+                    var selected = $"/static/useravatars/{User!.Uuid:N}.png";
+                    var avatarPath = File.Exists(selected.TrimStart('/')) ? selected : "/static/useravatars/unknown.png";
+                    <img class="user-icon" src="@(avatarPath)" />
+                }
+                @if ((ForceShowPrefix || (_rank!.ShowRankName && ShowPrefix)) && !string.IsNullOrWhiteSpace(_rank?.Name))
+                {
+                    <span>[@_rank.Name] </span>
+                }
+                @if (ShowName)
+                {
+                    @User?.ShownName
+                }
+            </span>
+        </a>
+    </div>
+
+}
+else if (User is not null)
+{
+
+    <div class="badge-container">
+        <a class="link" href="/user/@User?.Username">
+            <span>
+                @if (ShowAvatar)
+                {
+                    var selected = $"/static/useravatars/{User!.Uuid:N}.png";
+                    var avatarPath = File.Exists(selected) ? selected : "/static/useravatars/unknown.png";
+                    <img class="user-icon" src="@(avatarPath)" />
+                }
+                @if (ShowName)
+                {
+                    @User?.ShownName
+                }
+            </span>
+        </a>
+    </div>
+}
+else
+{
+    <a class="link grayed">
+        <span>
+            @if (ShowAvatar)
+            {
+                <img class="user-icon" src="/static/useravatars/unknown.png" />
+            }
+            Unknown
+        </span>
+    </a>
+
+}
+@code {
+    [Inject] private DatabaseContext _db { get; set; }
+    [Parameter] public UserModel? User { get; set; }
+    [Parameter] public bool ShowName { get; set; } = true;
+    [Parameter] public bool ShowAvatar { get; set; } = true;
+    [Parameter] public bool ShowPrefix { get; set; } = true;
+    [Parameter] public bool ForceShowPrefix { get; set; } = false;
+    private UserRankModel? _rank;
+    protected override void OnParametersSet()
+    {
+        _rank = _db.Ranks.FirstOrDefault(s => s.Id == (User == null ? 0 : User.RankId));
+    }
+}

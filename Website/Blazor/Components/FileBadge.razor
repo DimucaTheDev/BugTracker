@@ -1,0 +1,61 @@
+﻿@using Website.Data
+@using Website.Model
+@inject NavigationManager Navigator
+@if (FileModel is not null)
+{
+    <a title="@($"File:\"{FileModel.FileName}\" id:{FileModel.Guid}")" target="_blank" class="link file-item" href="/attached-file/@FileModel.Guid">
+        <span class="bg">
+            @{
+                var selected = $"/fileformat/{Path.GetExtension(FileModel.FileName).TrimStart('.')}.png";
+                var avatarPath = File.Exists("wwwroot/" + selected) ? selected : "/fileformat/blank.png";
+                <img class="user-icon" src="@(avatarPath)" />
+            }
+            @FileModel?.FileName (@(FormatBytes(FileModel.Size)))
+        </span>
+        @if (Path.GetExtension(FileModel.FileName) is ".png" or ".jpg" or ".jpeg" or ".gif")
+        {
+            <div class="file-preview">
+                <img src="/attached-file/@FileModel.Guid" alt="Preview" />
+            </div>
+        }
+    </a>
+}
+else
+{
+    <a title="File not exists or broken link" class="link grayed">
+        <span class="bg">
+            <img class="user-icon" src="/fileformat/broken.png" />
+            Deleted
+        </span>
+    </a>
+}
+
+@code {
+    [Parameter]
+    public string Guid { get; set; }
+    [Parameter]
+    public AttachedFileModel? FileModel { get; set; }
+    [Inject]
+    private DatabaseContext _db { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        FileModel ??= _db.AttachedFiles.FirstOrDefault(s => s.Guid == Guid);
+    }
+
+    public static string FormatBytes(long? bytes = 0)
+    {
+        const long Kilobyte = 1024;
+        const long Megabyte = Kilobyte * 1024;
+        const long Gigabyte = Megabyte * 1024;
+
+        if (bytes >= Gigabyte)
+            return $"{bytes / Gigabyte} GB";
+        if (bytes >= Megabyte)
+            return $"{bytes / Megabyte} MB";
+        if (bytes >= Kilobyte)
+            return $"{bytes / Kilobyte} KB";
+
+        return $"{bytes} B";
+    }
+}

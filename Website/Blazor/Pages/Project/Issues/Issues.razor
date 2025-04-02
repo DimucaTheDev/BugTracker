@@ -1,0 +1,342 @@
+﻿@page "/project/{ProjectCode}/issues/{IssueCode:int?}"
+@using Microsoft.AspNetCore.WebUtilities
+@using Website.Data
+@using Website.Model
+@layout IssueLayout
+@inject DatabaseContext Database
+@inject IHttpContextAccessor Context
+@{
+    if (!Database.Projects.Any(s => s.ProjectCode == ProjectCode))
+    {
+        <NotFoundPage />
+        return;
+    }
+
+    ApplyFilters();
+}
+<div class="left">
+    <div class="inline-div">
+        <div>
+            <p class="filter-div-selector" @onclick='ToggleDropdown'>
+                @if (filters.Count > 0)
+                {
+                    <b>Фильтры поиска (Выбрано: @(filters.Count))</b>
+                }
+                else
+                {
+                    <b>Фильтры поиска</b>
+                }
+            </p>
+            <hr style="margin: 0" />
+
+            <div class="filter-dropdown" style='display: @(dropdownVisible ? "block" : "none")'>
+                <label>Заголовок:</label>
+                <input type="text" placeholder="Поиск по названию" @oninput='e => UpdateFilter("title", e.Value?.ToString()??"")' />
+                <br />
+
+                <label>Тип задачи:</label>
+                <select @onchange='e => UpdateFilter("type", e.Value.ToString())'>
+                    @if (!filters.ContainsKey("type") || string.IsNullOrEmpty(filters["type"]))
+                    {
+                        <option value="" selected>Все</option>
+                    }
+                    else
+                    {
+                        <option value="">Все</option>
+                    }
+                    @foreach (var issueType in Enum.GetValues<IssueType>())
+                    {
+                        @if (filters.TryGetValue("type", out var type) && type == issueType.ToString())
+                        {
+                            <option value='@issueType' selected>@(issueType.GetIssueTypeName())</option>
+                        }
+                        else
+                        {
+                            <option value='@issueType'>@(issueType.GetIssueTypeName())</option>
+                        }
+                    }
+                </select>
+                <br />
+
+                <label>Статус:</label>
+                <select @onchange='e => UpdateFilter("status", e.Value.ToString())'>
+                    @if (!filters.ContainsKey("status") || string.IsNullOrEmpty(filters["status"]))
+                    {
+                        <option value="" selected>Все</option>
+                    }
+                    else
+                    {
+                        <option value="">Все</option>
+                    }
+                    @foreach (var issueStatus in Enum.GetValues<IssueStatus>())
+                    {
+                        @if (filters.TryGetValue("status", out var status) && status == issueStatus.ToString())
+                        {
+                            <option value='@issueStatus' selected>@issueStatus.GetIssueStatusName()</option>
+                        }
+                        else
+                        {
+                            <option value='@issueStatus'>@(issueStatus.GetIssueStatusName())</option>
+                        }
+                    }
+                </select>
+                <br />
+
+                @{
+                    var fromValue = filters.TryGetValue("from", out var from) ? from : "";
+                }
+                @{
+                    var toValue = filters.TryGetValue("to", out var to) ? to : "";
+                }
+
+                <label>Создано после:</label>
+                <input type="date"
+                       value="@fromValue"
+                       @onchange='e => UpdateFilter("from", e.Value.ToString())' />
+                <br />
+
+                <label>Создано до:</label>
+                <input type="date"
+                       value="@toValue"
+                       @onchange='e => UpdateFilter("to", e.Value.ToString())' />
+
+                <br />
+                <label>Наличие исполнителя:</label>
+                <select @onchange='e => UpdateFilter("has_assigner", e.Value.ToString())'>
+                    @if (!filters.ContainsKey("has_assigner") || string.IsNullOrEmpty(filters["has_assigner"]))
+                    {
+                        <option value="" selected>Указан или не указан</option>
+                    }
+                    else
+                    {
+                        <option value="">Указан или не указан</option>
+                    }
+                    @if (filters.TryGetValue("has_assigner", out var has_assigner) && has_assigner == "yes")
+                    {
+                        <option value='yes' selected>Указан</option>
+                    }
+                    else
+                    {
+                        <option value='yes'>Указан</option>
+                    }
+                    @if (filters.TryGetValue("has_assigner", out _) && has_assigner == "no")
+                    {
+                        <option value='no' selected>Не указан</option>
+                    }
+                    else
+                    {
+                        <option value='no'>Не указан</option>
+                    }
+                </select>
+
+
+                <label>Подтверждение:</label>
+                <select @onchange='e => UpdateFilter("confirmation", e.Value.ToString())'>
+                    @if (!filters.ContainsKey("confirmation") || string.IsNullOrEmpty(filters["confirmation"]))
+                    {
+                        <option value="" selected>Все</option>
+                    }
+                    else
+                    {
+                        <option value="">Все</option>
+                    }
+                    @foreach (var issueType in Enum.GetValues<ConfirmationStatus>())
+                    {
+                        @if (filters.TryGetValue("confirmation", out var confirmation) && confirmation == issueType.ToString())
+                        {
+                            <option value='@issueType' selected>@(issueType.GetIssueConfirmation())</option>
+                        }
+                        else
+                        {
+                            <option value='@issueType'>@(issueType.GetIssueConfirmation())</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        @if (dropdownVisible)
+        {
+            <hr style="margin: 0" />
+        }
+        <div>
+            @if (croppedIssues.Any())
+            {
+                @foreach (var issue in croppedIssues)
+                {
+                    <a style="text-decoration: none; background-color: @(issue.IssueId == IssueCode ? "gainsboro" : "");" href="/project/@(issue.Project!.ProjectCode)/issues/@(issue.IssueId)" class="bg_colored">
+                        <div class="issue">
+                            <img src="@(issue.IssueType.GetIssueTypeIconPath())" class="icon" />
+                            <div class="content">
+                                <p class="title" style="color: @(issue.IssueType == IssueType.Critical ? "red" : "black")">@(issue.Project!.ProjectCode)-@(issue.IssueId)</p>
+                                <span class="description">@(issue.Title)</span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <p class="no-issues">Нет задач для показа</p>
+            }
+        </div>
+
+    </div>
+    @if (issues > 20)
+    {
+        <div class="page-changer">
+            <hr />
+            <span>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    if (i == 1 || i == totalPages || (i >= page - 1 && i <= page + 1))
+                    {
+                        <a href="@GetPageUrl(i)" class="@(i == page ? "active" : "")">@i</a>
+                    }
+                    else if (i == page - 2 || i == page + 2)
+                    {
+                        <span>...</span>
+                    }
+                }
+            </span>
+        </div>
+    }
+
+</div>
+<div class="inline-div">
+    <Issue ProjectCode="@ProjectCode" IssueId="IssueCode ?? -1" />
+</div>
+
+@code {
+    [CascadingParameter]
+    public IssueLayout Layout { get; set; }
+    [Parameter]
+    public string ProjectCode { get; set; }
+    [Parameter]
+    public int? IssueCode { get; set; }
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    private IssueModel? _selectedIssue;
+    private bool dropdownVisible = false;
+    private Dictionary<string, string> filters = new();
+    private int issues;
+    private List<IssueModel> croppedIssues = new();
+    private int page = 1;
+    private int totalPages;
+
+    protected override void OnParametersSet()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        if (query.TryGetValue("page", out var pageQuery))
+        {
+            if (int.TryParse(pageQuery, out int pageNumber))
+            {
+                page = pageNumber;
+            }
+        }
+        query.ToList().ForEach(s => filters.TryAdd(s.Key, s.Value.ToString()));
+
+        Layout.ProjectCode = ProjectCode;
+        SelectIssue(IssueCode ?? -1);
+        base.OnParametersSet();
+    }
+    private string GetPageUrl(int targetPage)
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        query.Set("page", targetPage.ToString());
+
+        var baseUrl = $"/project/{ProjectCode}/issues";
+        if (IssueCode.HasValue)
+        {
+            baseUrl += $"/{IssueCode.Value}";
+        }
+
+        return $"{baseUrl}?{query}";
+    }
+
+    private void SelectIssue(int id)
+    {
+        _selectedIssue = Database.Issues.FirstOrDefault(i =>
+            i.IssueId == IssueCode
+            && i.Project!.ProjectCode.ToLower() == ProjectCode.ToLower());
+        this.StateHasChanged();
+    }
+    private void ToggleDropdown()
+    {
+        dropdownVisible = !dropdownVisible;
+    }
+    private void UpdateFilter(string key, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            filters[key] = value;
+        }
+        else
+        {
+            filters.Remove(key);
+        }
+    }
+    private void ApplyFilters()
+    {
+        var query = Database.Issues
+            .Where(i => i.Project!.ProjectCode == ProjectCode);
+
+        #region Filters
+        // Применяем фильтры
+        // Фильтрация по типу задачи
+        if (filters.TryGetValue("title", out var title))
+        {
+            query = query.Where(i => (i.Title ?? "").ToLower().Contains(title.ToLower()));
+        }
+        if (filters.TryGetValue("type", out var type) && Enum.TryParse<IssueType>(type, true, out var issueType))
+        {
+            query = query.Where(i => i.IssueType == issueType);
+        }
+        // Фильтрация по статусу
+        if (filters.TryGetValue("status", out var status) && Enum.TryParse<IssueStatus>(status, true, out var issueState))
+        {
+            query = query.Where(i => i.Status == issueState);
+        }
+        // Фильтрация по дате "from"
+        if (filters.TryGetValue("from", out var from) && DateTime.TryParse(from, out var fromDate))
+        {
+            query = query.Where(i => i.CreatedAt >= fromDate);
+        }
+        // Фильтрация по дате "to"
+        if (filters.TryGetValue("to", out var to) && DateTime.TryParse(to, out var toDate))
+        {
+            query = query.Where(i => i.CreatedAt <= toDate);
+        }
+        if (filters.TryGetValue("has_assigner", out var hasAssigner))
+        {
+            if (hasAssigner.Equals("yes", StringComparison.OrdinalIgnoreCase))
+            {
+                query = query.Where(i => i.UserAssigned != null);
+            }
+            else if (hasAssigner.Equals("no", StringComparison.OrdinalIgnoreCase))
+            {
+                query = query.Where(i => i.UserAssigned == null);
+            }
+        }
+        if (filters.TryGetValue("confirmation", out var s) && Enum.TryParse<ConfirmationStatus>(s, true, out var confirmation))
+        {
+            query = query.Where(i => i.ConfirmationStatus == confirmation);
+        }
+        #endregion
+
+        issues = query.Count();
+        totalPages = (int)Math.Ceiling(issues / 20.0);
+        croppedIssues = query
+            .OrderByDescending(issue => issue.UpdatedAt ?? issue.CreatedAt)
+            .Include(i => i.UserCreated) // Включаем UserCreated
+            .Include(i => i.UserAssigned)
+            .Include(i => i.UserCreated!.UserRank)
+            .Include(i => i.UserAssigned!.UserRank)
+            .Include(i => i.Project) // Включаем Project
+            .Skip((page - 1) * 20)
+            .Take(20)
+            .ToList();
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "MainRedirectTo": "/Overview",
+  "Ranks": {
+    "1": {
+      "background": "b00",
+      "foreground": "fff"
+    }
+  },
+  // Заставит картинки помещаться на экран ( max-width=100% )
+  // ya hz ono rabotaet ili net XD
+  "ResizeMDImages": true
+}

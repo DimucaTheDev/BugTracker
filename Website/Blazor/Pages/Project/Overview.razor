@@ -1,0 +1,116 @@
+﻿@page "/project/{ProjectCode}"
+@layout ProjectLayout
+@using Website.Blazor.Layout
+@using Website.Blazor.Layout
+@using Website.Data
+@using Website.Model
+@if (_project is null)
+{
+    <NotFoundPage Route="@($"project/{ProjectCode}")" />
+    return;
+}
+
+<div class="container">
+    <div class="header">
+        <h2>@(PreviewName ?? _project.ProjectName) - Обзор</h2>
+    </div>
+
+    <div class="card">
+        <h3>О проекте</h3>
+        <p><strong>Название:</strong> @(PreviewName ?? _project.ProjectName)</p>
+        <p><strong>Описание:</strong> @(PreviewDescription ?? _project.Description ?? "<Не указано>")</p>
+        <p><strong>Версия:</strong> @(PreviewVersion ?? DbContext.Versions.Where(s => s.Project == _project).OrderByDescending(s => s.Priority).FirstOrDefault()?.Name ?? "Не указано")</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+        <h3>Статистика</h3>
+        <p><strong>Всего задач:</strong> @(DbContext.Issues.Count(s => s.Project == _project))</p>
+        <p><strong>Открытые:</strong> @DbContext.Issues.Count(s => s.Project == _project && s.Status == IssueStatus.Open)</p>
+        <p><strong>В работе:</strong> @DbContext.Issues.Count(s => s.Project == _project && s.Status == IssueStatus.InProgress)</p>
+        <p><strong>Закрытые:</strong> @DbContext.Issues.Count(s => s.Project == _project && (s.Status == IssueStatus.CannotReproduce || s.Status == IssueStatus.Cancelled|| s.Status == IssueStatus.Deferred|| s.Status == IssueStatus.Closed || s.Status == IssueStatus.WontFix || s.Status == IssueStatus.Resolved))</p>
+    </div>
+
+    <!--
+    <div class="card">
+    <h3>Последние обновления</h3>
+
+    @if (Issues == null)
+    {
+    <p>Загрузка...</p>
+    }
+    else if (Issues.Count == 0)
+    {
+    <p>Нет активных задач.</p>
+    }
+    else
+    {
+    @foreach (var issue in Issues)
+    {
+    <div class="issue @GetStatusClass(issue.Status)">
+        <strong>[#@issue.Id] @issue.Title</strong>
+        <p>@issue.Description</p>
+        <small>Последнее обновление: @(issue.UpdatedAt?.ToString("dd.MM.yyyy HH:mm") ?? issue.CreatedAt.ToString("dd.MM.yyyy HH:mm"))</small>
+    </div>
+    }
+    }
+    </div>-->
+
+</div>
+
+
+@code {
+    [Inject]
+    private DatabaseContext DbContext { get; set; } = default!;
+
+    [Parameter]
+    public required string ProjectCode { get; set; }
+
+    [SupplyParameterFromQuery(Name = "p-description")]
+    public string? PreviewDescription { get; set; }
+
+    [SupplyParameterFromQuery(Name = "p-name")]
+    public string? PreviewName { get; set; }
+
+    [SupplyParameterFromQuery(Name = "p-version")]
+    public string? PreviewVersion { get; set; }
+
+    [SupplyParameterFromQuery(Name = "p-wide")]
+    public string? PreviewWideIcon { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+    }
+
+    [CascadingParameter]
+    public required ProjectLayout Layout { get; set; }
+    private ProjectModel? _project;
+    private List<IssueModel>? Issues;
+
+    protected override void OnInitialized()
+    {
+        Issues = LoadRecentActions();
+        if ((_project = DbContext.Projects.FirstOrDefault(s => s.ProjectCode == ProjectCode)) is null) return;
+        Layout.ProjectCode = ProjectCode;
+        Layout.ProjectName = _project?.ProjectName;
+        Layout.PreviewWide = PreviewWideIcon;
+    }
+
+    private List<IssueModel> LoadRecentActions()
+    {
+        return DbContext.Issues
+            .OrderByDescending(i => i.UpdatedAt ?? i.CreatedAt)
+            .Take(3)
+            .ToList();
+    }
+
+    private string GetStatusClass(IssueStatus status) => status switch
+    {
+        IssueStatus.Open => "status-open",
+        IssueStatus.InProgress => "status-inprogress",
+        IssueStatus.Closed => "status-closed",
+        _ => "status-unknown"
+    };
+}

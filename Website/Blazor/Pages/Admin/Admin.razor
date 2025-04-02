@@ -1,0 +1,179 @@
+﻿@page "/admin"
+@using Website.Data
+@using Website.Model
+@inject IHttpContextAccessor ContextAccessor
+@attribute [Auth]
+
+@if (!authorized)
+{
+    <NotFoundPage Route="admin" />
+    return;
+}
+
+<div class="container">
+    <div class="header">
+        <h2>Панель управления</h2>
+    </div>
+
+    <div class="card">
+        <h3>Проекты</h3>
+        <br />
+        <table>
+            <thead>
+                <tr style="background-color: #d5d5d5; cursor: pointer">
+                    <th style="width: 32px"></th>
+                    <th @onclick='() => SortBy("ProjectName", s => s.ProjectName)'>
+                        @($"Проект {(_currentSortColumn == "ProjectName" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+                    </th>
+                    <th @onclick='() => SortBy("ProjectCode", s => s.ProjectCode)'>
+                        @($"Код {(_currentSortColumn == "ProjectCode" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+                    </th>
+                    <th @onclick='() => SortBy("ManagerUser", s => s.ManagerUser?.Username)'>
+                        @($"Проектный Менеджер {(_currentSortColumn == "ManagerUser" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+                    </th>
+                    <th @onclick='() => SortBy("Category", s => s.Category?.Name)'>
+                        @($"Категория {(_currentSortColumn == "Category" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+                    </th>
+                    <th @onclick='() => SortBy("ProjectUrl", s => s.ProjectUrl)'>
+                        @($"URL Проекта {(_currentSortColumn == "ProjectUrl" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
+                    </th>
+                </tr>
+            </thead>
+
+            @{
+                var l = DbContext.Projects
+                .Include(projectModel => projectModel.Category) // Заменить на нужный порядок
+                .ToList();
+
+                l.Sort(_comparison);
+            }
+            @foreach (var project in l)
+            {
+                var projectProjectUrl = project.ProjectUrl;
+                <tr>
+                    <th>
+                        <div class="pencil">
+                            <a title="Редактирование" href="/Admin/EditProject/@(project.ProjectCode)">✏️</a>
+                        </div>
+                    </th>
+                    <th>
+                        <a href="/project/@project.ProjectCode" style="text-decoration: none">
+                            @{
+                                var path = $"static/projects/{project.ProjectCode}.png";
+                                if (File.Exists(path))
+                                {
+                                    <img src="/@path" class="icon" />
+                                }
+                                else
+                                {
+                                    @*No Icon*@
+                                    <span style="margin-right: 40px"></span>
+                                }
+                            }
+                            @project.ProjectName
+                        </a>
+                    </th>
+                    <th>@project.ProjectCode</th>
+                    @{
+                        var id = project.ManagerUserId;
+                        var user = DbContext.Users
+                        .Include(s => s.UserRank)
+                        .FirstOrDefault(u => u.Id == id);
+                    }
+                    <th><AccountBadge User=user /></th>
+                    <th>
+                        <span class="@(project.Category?.Id == 0 ? "grayed" : "")">@project.Category?.Name</span>
+                    </th>
+                    <th>
+                        @if (string.IsNullOrWhiteSpace(projectProjectUrl))
+                        {
+                            <span class="grayed">Нет URL Проекта</span>
+                        }
+                        else
+                        {
+                            <a href="@projectProjectUrl">
+                                @projectProjectUrl
+                            </a>
+                        }
+                    </th>
+                </tr>
+            }
+            <tr>
+                <th colspan="10">
+                    <button @onclick='() => { Navigation.NavigateTo("/Admin/NewProject"); }' class="add-project-button">Добавить новый проект</button>
+                </th>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+        <h3>Пользователи</h3>
+        <ul>
+            <li><strong>Имя:</strong> Иван Иванов | <strong>Роль:</strong> Администратор</li>
+            <li><strong>Имя:</strong> Петр Петров | <strong>Роль:</strong> Разработчик</li>
+        </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+        <h3>Роли</h3>
+        <ul>
+            <li>Администратор</li>
+            <li>Разработчик</li>
+            <li>Тестировщик</li>
+        </ul>
+    </div>
+</div>
+
+
+@code {
+    private bool authorized;
+    private UserModel user;
+    [Inject]
+    private DatabaseContext DbContext { get; set; } = default!;
+    [Inject] 
+    public NavigationManager Navigation { get; set; }
+
+    private string _searchName = "";
+    private uint _searchCategory = 0;
+    private string? _currentSortColumn = null;
+    private bool _isSortAscending = true;
+    private Comparison<ProjectModel> _comparison = (_, _) => 0;
+
+    private void SortBy(string column, Func<ProjectModel, string?> keySelector)
+    {
+        if (_currentSortColumn == column)
+        {
+            _isSortAscending = !_isSortAscending; // инвертируем направление
+        }
+        else
+        {
+            _currentSortColumn = column;
+            _isSortAscending = true; // по умолчанию по возрастанию
+        }
+
+        _comparison = (s1, s2) =>
+        {
+            var result = String.Compare(keySelector(s1), keySelector(s2), StringComparison.OrdinalIgnoreCase);
+            return _isSortAscending ? result : -result;
+        };
+    }
+
+    protected override void OnParametersSet()
+    {
+        bool authenticated = ContextAccessor.HttpContext.Request.TryAuthenticate(out user);
+        if (authenticated)
+        {
+            authorized = user.UserRank?.Rights.HasFlag(UserRights.FullAdmin) ?? false;
+        }
+        else
+        {
+            ContextAccessor.HttpContext.Response.Redirect("/login?redir=/admin");
+        }
+    }
+
+}

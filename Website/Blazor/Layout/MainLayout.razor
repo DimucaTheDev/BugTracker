@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Website.Model
+@inherits LayoutComponentBase
+@inject IHttpContextAccessor HttpContext
+@inject IJSRuntime js
+@{
+    UserModel? user = null;
+    bool admin = false;
+    if (HttpContext.HttpContext != null)
+    {
+        if (HttpContext.HttpContext.Request.TryAuthenticate(out user))
+            admin = (user.UserRank?.Rights ?? UserRights.None).HasFlag(UserRights.FullAdmin);
+    }
+}
+<div class="page">
+    <div style="background-image:none;background-color:#213a9c;" class="sidebar">
+        <NavMenu IsAdmin="admin" />
+    </div>
+
+    <main>
+        <div class="top-row" style="margin-left: 0 !important; ">
+            <a href="/">
+                <img src="bt_brand_transparent_placeholder.png" style="margin: 0; max-width: 100%; max-width: 100%; display: block" />
+            </a>
+            <div style="left: 100%; position: sticky">
+                <a href="/createIssue" class="btn-top">Создать Задачу</a>
+
+                @if (HttpContext.HttpContext != null && HttpContext.HttpContext.User.Identity!.IsAuthenticated)
+                {
+                    <AccountBadge User="user" />
+                    <!--<p style="text-align: center;font-size: small;margin-bottom: -10px;margin-top: 2px;">Logout</p>-->
+                }
+                else
+                {
+                    <a href="/login?redir=/" class="btn-top">Вход</a>
+                    <a href="/register?redir=/" class="btn-top">Регистрация</a>
+                }
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    Unhandled error occurred. Reload page to continue
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+@functions
+{
+    protected override void OnAfterRender(bool f)
+    {
+        js.InvokeVoidAsync("hljs.highlightAll");
+        if (f)
+        {
+            //js.InvokeVoidAsync("clearMathJax");
+            //js.InvokeVoidAsync("MathJax.typesetPromise");
+        }
+    }
+}

@@ -1,0 +1,161 @@
+﻿.inline-div {
+    flex: 1; /* Занимает оставшееся пространство */
+    background-color: #F7F7F7;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Скрыть лишнее */
+}
+
+.left {
+    max-width: 310px; /* Устанавливаем максимальную ширину */
+    overflow-y: auto; /* Прокрутка по вертикали */
+    overflow-x: hidden; /* Убираем горизонтальную прокрутку */
+    height: 100%; /* Устанавливаем высоту для полного заполнения родительского элемента */
+    box-sizing: border-box; /* Учитываем границы и padding */
+    border-right: black 1px solid;
+}
+
+.issue {
+    width: calc(100% - 0px); /* Уменьшаем ширину на ширину рамки */
+    min-height: 55px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex; /* Расположить элементы в строку */
+    align-items: flex-start; /* Выровнять элементы по верхнему краю */
+    gap: 8px; /* Пространство между иконкой и текстом */
+    padding: 8px; /* Внутренние отступы для эстетики */
+    border-bottom: 1px solid #ddd; /* Разделительная линия между элементами */
+    font-family: Arial, sans-serif; /* Гарнитура шрифта */
+}
+
+.bg_colored :hover {
+    background-color: #cdcdcd;
+}
+    .bg_colored {
+        
+    }
+.icon {
+    width: 16px; /* Размер иконки */
+    height: 16px;
+    margin-top: 5px; /* Небольшой отступ для выравнивания */
+}
+
+.content {
+    display: flex;
+    flex-direction: column; /* Расположить заголовок и описание друг под другом */
+    padding-top: 0.1rem;
+    width: inherit;
+}
+
+.title {
+    font-weight: bold; /* Выделить заголовок */
+    color: #0073e6; /* Цвет ссылки */
+    text-decoration: none; /* Убрать подчеркивание */
+    margin-bottom: 4px; /* Отступ под заголовком */
+}
+
+    .title:hover {
+        text-decoration: underline; /* Подчеркивание при наведении */
+    }
+
+.description {
+    font-size: 14px; /* Размер текста описания */
+    color: #555; /* Серый цвет текста для описания */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 15px);
+}
+.no-issues {
+    text-align: center;
+    font-size: 20px;
+    margin: 50px 20px 0
+}
+
+.filter-div-selector {
+    cursor: pointer;
+    font-size: 17px;
+    margin: 10px 0 10px 10px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.filter-div-selector:hover {
+    text-decoration: underline
+}
+
+.filter-dropdown {
+    /*position: absolute;*/ 
+    padding: 0 0 10px 0; 
+    width: 200px;
+    z-index: 100;
+    margin-left: 10px;
+    margin-top: -5px;
+} 
+.filter-dropdown label {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.filter-dropdown select,
+.filter-dropdown input {
+    width: 120%;
+    padding: 5px;
+    margin-top: 3px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-dropdown button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 5px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter-dropdown button:hover {
+    background: #0056b3;
+}
+
+.page-changer {
+    height: 50px;
+    width: 100%;
+    background-color: #e5e5e5;
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.page-changer a {
+    text-decoration: none;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: white;
+    margin: 0 5px;
+}
+
+.page-changer a.active {
+    background-color: dodgerblue;
+    color: white;
+    font-weight: bold;
+}
+
+.page-changer span {
+    padding: 5px;
+}

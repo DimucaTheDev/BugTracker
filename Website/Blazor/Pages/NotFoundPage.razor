@@ -1,0 +1,28 @@
+﻿@page "/{*route:nonfile}"
+@using System.Net
+@using Website.Model
+@inject IHttpContextAccessor Hca
+<title>404 Not Found</title>
+@{
+    var isAuthorized = Hca.HttpContext!.Request.TryAuthenticate(out var user);
+}
+<h4>
+    Cleverly done, @(isAuthorized ? user.ShownName : "Mr. Freeman"), but you're not supposed to be here. <br />
+    As a matter of fact, you're not.<br />
+    Get back <a href="/">where you belong</a>, and forget about all this, until we meet again.
+</h4>
+<br />
+<h5><span style="font-size: xx-large">404</span>: The page <b><i>/@Route</i></b> was not found.</h5>
+
+
+@code {
+    [Parameter]
+    public string? Route { get; set; }
+    protected override void OnInitialized()
+    {
+        if (Hca.HttpContext is { Response.HasStarted: false })
+        {
+            Hca.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+        }
+    }
+}
