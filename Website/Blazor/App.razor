@@ -1,9 +1,4 @@
-﻿@inject IJSRuntime js
-@using System.Reflection
-@using Microsoft.AspNetCore.Components.Authorization
-@using Website.Blazor.Layout
-@using Website.Blazor.Pages
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,15 +7,13 @@
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="Website.styles.css?@(Program.RandomInteger)" />
+    <link rel="stylesheet" href="Website.styles.css" />
     <link rel="stylesheet" href="/js/highlight/styles/default.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <script src="/js/index.js?@(Program.RandomInteger)"></script>
-    <script src="/js/post.js?@(Program.RandomInteger)"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/post.js"></script>
     <script src="/js/highlight/highlight.js" async></script>
-    <script src="/js/dropdown.js"></script>
-
-    @*<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>*@
+    <script src="/js/dropdown.js"></script> 
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 

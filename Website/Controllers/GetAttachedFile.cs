@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Website.Data;
 using Website.Util;
 
@@ -23,7 +24,7 @@ namespace Website.Controllers
             if (!System.IO.File.Exists(path))
             {
                 //Файл есть в базе данных, но отсутствует на сервере
-                //logger.LogError("File not found on server: {path}", path);
+                Log.Error("File not found on server: {path}", path);
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Requested file not found on server. This is an internal server error.");
             }

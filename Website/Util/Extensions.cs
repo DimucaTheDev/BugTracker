@@ -30,7 +30,7 @@ namespace Website.Util
             return true;
         }
 
-        public static bool Authorized(this Endpoint e)
+        public static bool RequiresAuthorization(this Endpoint e)
         {
             if (e?.Metadata == null)
                 return false;
@@ -190,10 +190,10 @@ namespace Website.Util
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 
             // Use Rfc2898DeriveBytes to generate the key bytes
-            using (var password = new Rfc2898DeriveBytes(Encoding.UTF8.GetString(passPhrase), new byte[] { 0x5A, 0x6F, 0x6E, 0xE4, 0x5D, 0x72 }))
+            using (var password = new Rfc2898DeriveBytes(Encoding.UTF8.GetString(passPhrase), [0x5A, 0x6F, 0x6E, 0xE4, 0x5D, 0x72]))
             {
                 byte[] keyBytes = password.GetBytes(keysize / 8);
-                using (RijndaelManaged symmetricKey = new RijndaelManaged())
+                using (var symmetricKey = new RijndaelManaged())
                 {
                     symmetricKey.Mode = CipherMode.CBC;
                     ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
