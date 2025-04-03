@@ -1,27 +1,12 @@
 image: mcr.microsoft.com/dotnet/sdk:9.0
 
-stages:
-  - restore
+stages: 
   - build
-
-restore-dependencies:
-  stage: restore
-  before_script:
-    - mkdir -p ~/.nuget/packages/
-  script:
-    - dotnet restore
-  cache:
-    key: nuget
-    paths:
-      - ~/.nuget/packages/
-    policy: pull-push
 
 build:
   stage: build
   script:
-    - dotnet build --configuration Release --no-restore
-  dependencies:
-    - restore-dependencies
+    - dotnet build Website -v q --configuration Release
   artifacts:
     paths:
       - bin/Release/
