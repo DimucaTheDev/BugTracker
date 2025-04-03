@@ -305,3 +305,5 @@ __pycache__/
 /Website/static/useravatars/*
 /Website/static/wideprojects/*
 /github.git
+/Website/private.key
+/Website/config.json
