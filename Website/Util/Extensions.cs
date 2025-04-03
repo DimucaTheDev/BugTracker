@@ -30,7 +30,7 @@ namespace Website.Util
             return true;
         }
 
-        public static bool Authorized(this Endpoint e)
+        public static bool RequiresAuthorization(this Endpoint e)
         {
             if (e?.Metadata == null)
                 return false;

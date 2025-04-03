@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Remove="config.json" />
 		<Content Remove="debug_database.db-shm" />
 	</ItemGroup>
 
@@ -29,20 +30,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Update="config.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="wwwroot\js\highlight\es\**" />
 		<None Include="wwwroot\js\highlight\languages\*" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="attached-files\**" />
 	  <Compile Remove="publish\**" />
+	  <Content Remove="attached-files\**" />
 	  <Content Remove="publish\**" />
+	  <EmbeddedResource Remove="attached-files\**" />
 	  <EmbeddedResource Remove="publish\**" />
+	  <None Remove="attached-files\**" />
 	  <None Remove="publish\**" />
 	</ItemGroup>
 
