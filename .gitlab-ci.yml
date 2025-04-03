@@ -1,28 +1,28 @@
 image: mcr.microsoft.com/dotnet/sdk:9.0
 
-stages: 
+stages:
+  - restore
   - build
 
-variables:
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_NOLOGO: true
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - .nuget/packages/
-
-before_script:
-  - echo "Using .NET $(dotnet --version)"
-  - dotnet --info
- 
+restore-dependencies:
+  stage: restore
+  before_script:
+    - mkdir -p ~/.nuget/packages/
+  script:
+    - dotnet restore
+  cache:
+    key: nuget
+    paths:
+      - ~/.nuget/packages/
+    policy: pull-push
 
 build:
   stage: build
   script:
-    - dotnet build Website --configuration Release
+    - dotnet build --configuration Release --no-restore
+  dependencies:
+    - restore-dependencies
   artifacts:
     paths:
-      - bin/
-      - obj/
-    expire_in: 1h
+      - bin/Release/
+    expire_in: 1 day
