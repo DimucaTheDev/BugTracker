@@ -1,7 +1,6 @@
 image: mcr.microsoft.com/dotnet/sdk:9.0
 
-stages:
-  - restore
+stages: 
   - build
 
 variables:
@@ -16,20 +15,12 @@ cache:
 before_script:
   - echo "Using .NET $(dotnet --version)"
   - dotnet --info
-
-restore:
-  stage: restore
-  script:
-    - dotnet restore
-  artifacts:
-    paths:
-      - .nuget/packages/
-    expire_in: 1h
+ 
 
 build:
   stage: build
   script:
-    - dotnet build --configuration Release --no-restore
+    - dotnet build --configuration Release
   artifacts:
     paths:
       - bin/
