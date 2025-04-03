@@ -20,7 +20,7 @@ before_script:
 build:
   stage: build
   script:
-    - dotnet build --configuration Release
+    - dotnet build Website --configuration Release
   artifacts:
     paths:
       - bin/
