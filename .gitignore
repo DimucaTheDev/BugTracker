@@ -307,3 +307,4 @@ __pycache__/
 /github.git
 /Website/private.key
 /Website/config.json
+/Website/logs
