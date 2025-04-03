@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Remove="config.json" />
 		<Content Remove="debug_database.db-shm" />
 	</ItemGroup>
 
@@ -20,18 +21,9 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="static\**">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Update="config.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -40,14 +32,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="attached-files\**" />
+	  <Compile Remove="logs\**" />
 	  <Compile Remove="publish\**" />
+	  <Compile Remove="static\**" />
+	  <Content Remove="attached-files\**" />
+	  <Content Remove="logs\**" />
 	  <Content Remove="publish\**" />
+	  <Content Remove="static\**" />
+	  <EmbeddedResource Remove="attached-files\**" />
+	  <EmbeddedResource Remove="logs\**" />
 	  <EmbeddedResource Remove="publish\**" />
+	  <EmbeddedResource Remove="static\**" />
+	  <None Remove="attached-files\**" />
+	  <None Remove="logs\**" />
 	  <None Remove="publish\**" />
+	  <None Remove="static\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="static\dev\" />
+	  <None Remove="database.db" />
+	  <None Remove="debug_database.db" />
+	  <None Remove="entity_framework.log" />
+	  <None Remove="private.key" />
+	  <None Remove="salt.txt" />
+	  <None Remove="todo.txt" />
+	  <None Remove="_debug_database.db" />
 	</ItemGroup>
 	<PropertyGroup>
 		<UseRazorSourceGenerator>false</UseRazorSourceGenerator>

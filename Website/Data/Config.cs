@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Serilog;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Website.Data
@@ -42,15 +43,15 @@ namespace Website.Data
             }
             catch (JsonException e)
             {
-                Console.WriteLine($"Configuration file config.json is corrupted and can not be deserialized.\n{e}");
+                Log.Information($"Configuration file config.json is corrupted and can not be deserialized.\n{e}");
                 Instance = DefaultConfig;
             }
             catch (Exception e) // when (e is IOException or UnauthorizedAccessException)
             {
-                Console.WriteLine($"Unable to read config.json:\n{e}");
+                Log.Information($"Unable to read config.json:\n{e}");
                 Instance = DefaultConfig;
             }
-            Console.WriteLine("Config reloaded");
+            Log.Information("Config reloaded");
         }
 
         /// <summary>
