@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Events;
 using Website.Data;
 using Website.Util;
 
@@ -29,9 +31,10 @@ namespace Website
         private static void GeneratePrivateKey()
         {
             var keyContent = new string(Enumerable.Range(0, 2048)
-                .Select(_ => (char)Random.Shared.Next(0x21, 0x7E))
+                .Select(_ => (char)Random.Shared.Next(0x21, 0x7E)) // random characters
                 .ToArray());
             File.WriteAllText("private.key", keyContent);
+            Log.Information("Private key generated. Please keep it safe and do not share it with anyone.");
         }
 
         public static void CheckAttachments()
@@ -55,6 +58,7 @@ namespace Website
             CreateDirectories();
             GenerateKeyIfNeeded();
             var builder = WebApplication.CreateBuilder(args);
+            SetupLogger(builder);
             ConfigureServices(builder);
             Application = builder.Build();
             ConfigureMiddleware(Application, builder);
@@ -63,7 +67,7 @@ namespace Website
 
         private static void CreateDirectories()
         {
-            foreach (var dir in new[] { "static/projects", "static/useravatars", "static/wideprojects", "static/template", "attached-files" })
+            foreach (var dir in new[] { "logs", "static/projects", "static/useravatars", "static/wideprojects", "static/template", "attached-files" })
             {
                 Directory.CreateDirectory(dir);
             }
@@ -72,6 +76,25 @@ namespace Website
         private static void GenerateKeyIfNeeded()
         {
             if (!File.Exists("private.key")) GeneratePrivateKey();
+        }
+
+        private static void SetupLogger(WebApplicationBuilder builder)
+        {
+
+            builder.Logging.ClearProviders();
+
+            var format = "[ {Level:u3} {Timestamp:yyyy-MM-dd HH:mm:ss} [{SourceContext}]] {Message:lj}{NewLine}{Exception}";
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console(outputTemplate: format)
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day,
+                outputTemplate: format) // Логи в файл
+            .Enrich.FromLogContext()
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", Serilog.Events.LogEventLevel.Warning) // Скрываем INFO
+            .MinimumLevel.Override("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogEventLevel.Warning)
+            .MinimumLevel.Information()
+            .CreateLogger();
+
+            builder.Host.UseSerilog();
         }
 
         private static void ConfigureServices(WebApplicationBuilder builder)
