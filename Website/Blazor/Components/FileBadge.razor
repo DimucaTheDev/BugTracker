@@ -1,7 +1,4 @@
-﻿@using Website.Data
-@using Website.Model
-@inject NavigationManager Navigator
-@if (FileModel is not null)
+﻿@if (FileModel is not null)
 {
     <a title="@($"File:\"{FileModel.FileName}\" id:{FileModel.Guid}")" target="_blank" class="link file-item" href="/attached-file/@FileModel.Guid">
         <span class="bg">

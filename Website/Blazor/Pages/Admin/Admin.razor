@@ -1,6 +1,4 @@
 ﻿@page "/admin"
-@using Website.Data
-@using Website.Model
 @inject IHttpContextAccessor ContextAccessor
 @attribute [Auth]
 
@@ -135,8 +133,6 @@
     private UserModel user;
     [Inject]
     private DatabaseContext DbContext { get; set; } = default!;
-    [Inject] 
-    public NavigationManager Navigation { get; set; }
 
     private string _searchName = "";
     private uint _searchCategory = 0;

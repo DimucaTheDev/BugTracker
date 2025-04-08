@@ -1,7 +1,4 @@
-﻿@using Website.Blazor.Pages.Users
-@using Website.Data
-@using Website.Model
-@if (User is not null && _rank is not null)
+﻿@if (User is not null && _rank is not null)
 {
     <div class="badge-container">
         <a class="link" href="/user/@User?.Username" style="color: #@(_rank?.ForegroundColor)">

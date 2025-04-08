@@ -1,6 +1,4 @@
-﻿@using Website.Blazor.Layout
-@using Website.Data
-<div class="top-row navbar navbar-dark" style="width: 100%; padding-top: 0; padding-bottom: 0">
+﻿<div class="top-row navbar navbar-dark" style="width: 100%; padding-top: 0; padding-bottom: 0">
     @if (!string.IsNullOrEmpty(Layout.ProjectCode) && File.Exists($"static/wideprojects/{Layout.ProjectCode}.png"))
     {
         @if (string.IsNullOrWhiteSpace(Layout.PreviewWide))

@@ -1,8 +1,6 @@
-﻿@using System.Web
-@using Microsoft.EntityFrameworkCore.Metadata
-@inject NavigationManager nav
+﻿@using System.Web 
 @{
-    var q = HttpUtility.ParseQueryString(new Uri(nav.Uri).Query);
+    var q = HttpUtility.ParseQueryString(new Uri(Navigation.Uri).Query);
 }
 @code
 {

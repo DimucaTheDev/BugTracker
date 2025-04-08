@@ -12,4 +12,11 @@
 @using Website.Blazor.Pages
 @using Website.Blazor.Layout
 @using Website.Util
+@using Website.Data
+@using Website.Model
 @using Microsoft.EntityFrameworkCore;
+@using Microsoft.Extensions.Localization 
+@inject IStringLocalizer<SharedResources> Localizer
+@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime

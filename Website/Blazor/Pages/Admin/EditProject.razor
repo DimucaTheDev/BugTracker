@@ -1,8 +1,4 @@
 ﻿@page "/admin/EditProject/{ProjectCode}"
-@using Microsoft.AspNetCore.Http.Extensions
-@using Website.Data
-@using Website.Model
-@using Website.Blazor.Pages
 @attribute [Auth]
 @if (!Database.Issues
   .Include(s => s.Project)
@@ -64,10 +60,8 @@
 
 @code {
     [Parameter] public required string ProjectCode { get; set; }
-    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
-    [Inject] public required NavigationManager Navigation { get; set; }
-    [Inject] public required DatabaseContext Database { get; set; }
-    [Inject] public required IJSRuntime JSRuntime { get; set; }
+    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; } 
+    [Inject] public required DatabaseContext Database { get; set; } 
     private ProjectModel _project = null!;
 
     string title, code, description, smallicon, wideicon;
@@ -80,7 +74,7 @@
     void Preview()
     {
         // window.openNewWindow("http://localhost:5230/project/ALPHA?p-description=Hello World&p-name=Test Prohect!&p-version=v3.0", 1200, 600)
-        JSRuntime.InvokeVoidAsync("window.openNewWindow", $"/project/{ProjectCode}?p-name={Uri.EscapeDataString(title)}&p-description={Uri.EscapeDataString(description)}&p-wide={Uri.EscapeDataString(wideicon)}", 1200, 600);
+        JsRuntime.InvokeVoidAsync("window.openNewWindow", $"/project/{ProjectCode}?p-name={Uri.EscapeDataString(title)}&p-description={Uri.EscapeDataString(description)}&p-wide={Uri.EscapeDataString(wideicon)}", 1200, 600);
     }
     private async Task SetSmallIcon(InputFileChangeEventArgs obj)
     {

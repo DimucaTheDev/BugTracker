@@ -1,7 +1,10 @@
 ﻿window.getTitle = () => {
     return document.title;
 };
-
+window.setCulture = function (culture) {
+    document.cookie = ".AspNetCore.Culture=c=" + culture + "|uic=" + culture + "; path=/";
+    location.reload();
+}
 window.appendSizeToDiv = (id, x, y) => {
     var e = document.getElementById(id);
     var w = parseInt(e.style.width);

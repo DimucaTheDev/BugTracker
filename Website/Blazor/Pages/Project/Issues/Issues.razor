@@ -1,7 +1,5 @@
 ﻿@page "/project/{ProjectCode}/issues/{IssueCode:int?}"
 @using Microsoft.AspNetCore.WebUtilities
-@using Website.Data
-@using Website.Model
 @layout IssueLayout
 @inject DatabaseContext Database
 @inject IHttpContextAccessor Context
@@ -213,9 +211,6 @@
     public string ProjectCode { get; set; }
     [Parameter]
     public int? IssueCode { get; set; }
-    [Inject]
-    public NavigationManager Navigation { get; set; }
-
     private IssueModel? _selectedIssue;
     private bool dropdownVisible = false;
     private Dictionary<string, string> filters = new();

@@ -1,7 +1,4 @@
 ﻿@using Markdig
-@using Markdig.Extensions.Emoji
-@using Markdig.Renderers
-@using Website.Data
 @((MarkupString)Markdig.Markdown.ToHtml(MarkdownString ?? "", new MarkdownPipelineBuilder().UseBootstrap().UseMathematics().UseSmartyPants().UseEmojiAndSmiley().UseAdvancedExtensions().Build()).Replace("<img", Config.Instance.ResizeMDImages ? "<img style=\"max-width:100%\" " : "<img").Replace("class=\"math\"", ""))
 @code {
     [Parameter]

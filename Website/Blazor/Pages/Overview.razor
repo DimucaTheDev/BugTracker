@@ -1,10 +1,6 @@
 ﻿@page "/overview"
-@using Website.Data
-@using Website.Model
-@inject HttpClient httpClient
-@inject IJSRuntime js
-@inject NavigationManager navigator
 @inject IHttpContextAccessor httpContextAccessor
+
 @{
     UserModel? m = null;
     if (httpContextAccessor.HttpContext != null)
@@ -22,7 +18,7 @@
 <Container Title="Обзор" BackgroundColor="#c60" TitleColor="#fff">
     <Markdown MarkdownString="@Config.Instance.OverviewMarkdown" />
 </Container>
-@*
+
 <Container Title="Some tests (нажми на меня!)" BackgroundColor="#000" Hidden="true">
     <Container Title="Каждый" BackgroundColor="#f00" TitleColor="#000">
         <Container Title="охотник" BackgroundColor="#f60" TitleColor="#000">
@@ -31,6 +27,17 @@
                     <Container Title="где" BackgroundColor="#0ff" TitleColor="#000">
                         <Container Title="сидит" BackgroundColor="#00f" TitleColor="#fff">
                             <Container Title="фазан" BackgroundColor="#8B00FF" TitleColor="#fff">
+
+                                <p>@Localizer["test"]</p>
+                                <button @onclick='() => ChangeLanguage("en-US")'>EN</button>
+                                <button @onclick='() => ChangeLanguage("ru-RU")'>RU</button>
+                                @code {
+                                    private async Task ChangeLanguage(string lang)
+                                    {
+                                        await LanguageService.SetCultureAsync(lang);
+                                    }
+                                }
+
                                 @code
                                 {
                                     private string cookie;
@@ -58,4 +65,3 @@
         </Container>
     </Container>
 </Container>
-*@

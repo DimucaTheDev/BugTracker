@@ -1,8 +1,6 @@
-﻿@using System.Web
-@using Microsoft.EntityFrameworkCore.Metadata
-@inject NavigationManager nav
+﻿@using System.Web 
 @{
-    var q = HttpUtility.ParseQueryString(new Uri(nav.Uri).Query);
+    var q = HttpUtility.ParseQueryString(new Uri(Navigation.Uri).Query);
 }
 <div class="login-box" style="width: 100%">
     <form method="post" id="login_form" action="/api/auth/login">
@@ -19,7 +17,7 @@
 
         <div class="actions">
             <button type="submit">Войти</button>
-            <button type="button" @onclick='() => { nav.NavigateTo($"/register?redir={q["redir"]??"/"}"); }' >Зарегистр.</button>
+            <button type="button" @onclick='() => { Navigation.NavigateTo($"/register?redir={q["redir"]??"/"}"); }' >Зарегистр.</button>
         </div>
         <p id="login_error" style="color: red; text-align: center"></p>
         <a href="/restore">Забыли пароль?</a>

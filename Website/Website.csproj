@@ -20,6 +20,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -53,6 +54,8 @@
 	<ItemGroup>
 	  <None Remove="database.db" />
 	  <None Remove="debug_database.db" />
+	  <None Remove="debug_database.db-shm" />
+	  <None Remove="debug_database.db-wal" />
 	  <None Remove="entity_framework.log" />
 	  <None Remove="private.key" />
 	  <None Remove="salt.txt" />

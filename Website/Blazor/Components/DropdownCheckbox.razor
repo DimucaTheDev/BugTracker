@@ -1,6 +1,4 @@
-﻿@inject IJSRuntime JS
-@using Website.Data
-@implements IAsyncDisposable
+﻿@implements IAsyncDisposable
 
 <div class="dropdown" @ref="DropdownRef">
     <button id="targetversions" type="button" @onclick="ToggleDropdown" style="background-color: #fff;color: black; padding: 0; padding-left: 5px" class="dropbtn">@Title</button>
@@ -43,7 +41,7 @@
         IsOpen = !IsOpen;
         if (IsOpen)
         {
-            await JS.InvokeVoidAsync("registerDropdown", DropdownRef, DotNetObjectReference.Create(this));
+            await JsRuntime.InvokeVoidAsync("registerDropdown", DropdownRef, DotNetObjectReference.Create(this));
         }
         StateHasChanged();
     }
@@ -76,7 +74,7 @@
     {
         if (firstRender)
         {
-            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "/js/dropdown.js");
+            JSModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/dropdown.js");
         }
     }
 

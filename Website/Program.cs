@@ -39,7 +39,6 @@ namespace Website
 
         public static void CheckAttachments()
         {
-            var logger = Application.Logger;
             using var scope = Application.Services.CreateScope();
             var databaseContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
 
@@ -47,7 +46,7 @@ namespace Website
             {
                 if (!File.Exists(Path.Combine("attached-files", file.Guid)))
                 {
-                    logger.LogWarning($"File({file.Id}) {file.Guid} ({file.FileName}) is in database but does not exist on server!");
+                    Log.Warning($"File({file.Id}) {file.Guid} ({file.FileName}) is in database but does not exist on server!");
                 }
             }
         }
@@ -99,6 +98,8 @@ namespace Website
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddLocalization((s) => s.ResourcesPath = "Resources");
+            builder.Services.AddScoped<ILanguageService, LanguageService>();
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlite($"Data Source={(IsDev ? "debug_database" : "database")}.db"));
             builder.Services.AddScoped<DatabaseContext>();
@@ -112,6 +113,7 @@ namespace Website
 
         private static void ConfigureAuthentication(WebApplicationBuilder builder)
         {
+
             builder.Services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -150,13 +152,17 @@ namespace Website
                 app.UseHsts();
                 app.UseExceptionHandler("/Error");
             }
-
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "static")),
                 RequestPath = "/static"
             });
+            string[] supportedLangs = ["en-US", "ru-RU"];
+            app.UseRequestLocalization(new RequestLocalizationOptions()
+                .AddSupportedCultures(supportedLangs)
+                .AddSupportedUICultures(supportedLangs));
+
             app.Use(AuthenticationMiddleware);
             app.UseRouting();
             app.UseAuthentication();
