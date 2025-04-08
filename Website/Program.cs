@@ -88,7 +88,9 @@ namespace Website
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day,
                 outputTemplate: format) // Логи в файл
             .Enrich.FromLogContext()
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", Serilog.Events.LogEventLevel.Warning) // Скрываем INFO
+            .MinimumLevel.Override("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogEventLevel.Warning)
             .MinimumLevel.Information()
             .CreateLogger();
