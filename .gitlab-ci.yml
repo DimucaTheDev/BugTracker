@@ -1,13 +1,15 @@
 image: mcr.microsoft.com/dotnet/sdk:9.0
 
 stages: 
-  - build
+  - build_webapp
+  - run_tests
 
 build:
-  stage: build
+  stage: build_webapp
   script:
     - dotnet build Website -v q --configuration Release
-  artifacts:
-    paths:
-      - bin/Release/
-    expire_in: 1 day
+
+run_tests:
+  stage: run_tests
+  script:
+    - dotnet test
