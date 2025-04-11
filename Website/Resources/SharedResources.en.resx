@@ -133,4 +133,136 @@
     <value>Admin</value>
     <comment>navmenu_admin</comment>
   </data>
+  <data name="overview_authorization" xml:space="preserve">
+    <value>Authorization</value>
+  </data>
+  <data name="login_username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="login_password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="login_remember" xml:space="preserve">
+    <value>Remember this device</value>
+  </data>
+  <data name="login_login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="login_register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="login_forgot" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="overview_overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="top_createissue" xml:space="preserve">
+    <value>Create Issue</value>
+  </data>
+  <data name="top_login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="top_register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="projects_all" xml:space="preserve">
+    <value>All Projects - {0}</value>
+  </data>
+  <data name="projects_nothing" xml:space="preserve">
+    <value>Nothing to show here.</value>
+  </data>
+  <data name="projects_nothing_create_new" xml:space="preserve">
+    <value>Create new project on admin page.</value>
+  </data>
+  <data name="projects_title" xml:space="preserve">
+    <value>Project List</value>
+  </data>
+  <data name="projects_select_category" xml:space="preserve">
+    <value>Select Category</value>
+  </data>
+  <data name="projects_all_categories" xml:space="preserve">
+    <value>All categories</value>
+  </data>
+  <data name="projects_p_name" xml:space="preserve">
+    <value>Project</value>
+  </data>
+  <data name="projects_p_code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="projects_p_manager" xml:space="preserve">
+    <value>Project Manager</value>
+  </data>
+  <data name="projects_p_category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="projects_p_url" xml:space="preserve">
+    <value>Project URL</value>
+  </data>
+  <data name="projects_p_no_url" xml:space="preserve">
+    <value>No Project URL</value>
+  </data>
+  <data name="projects_search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="filebadge_deleted" xml:space="preserve">
+    <value>Deleted</value>
+    <comment>filebadge_deleted</comment>
+  </data>
+  <data name="filebadge_delete" xml:space="preserve">
+    <value>Delete file?</value>
+    <comment>filebagde_delete</comment>
+  </data>
+  <data name="filebadge_not_found" xml:space="preserve">
+    <value>File not found</value>
+    <comment>filebadge_not_found</comment>
+  </data>
+  <data name="navmenu_info" xml:space="preserve">
+    <value>Information</value>
+    <comment>navmenu_info</comment>
+  </data>
+  <data name="navmenu_issues" xml:space="preserve">
+    <value>Issues</value>
+    <comment>navmenu_issues</comment>
+  </data>
+  <data name="register_username" xml:space="preserve">
+    <value>Username</value>
+    <comment>register_username</comment>
+  </data>
+  <data name="register_have_account" xml:space="preserve">
+    <value>Already have account?</value>
+    <comment>register_have_account</comment>
+  </data>
+  <data name="register_register" xml:space="preserve">
+    <value>Register</value>
+    <comment>register_register</comment>
+  </data>
+  <data name="register_repeat_password" xml:space="preserve">
+    <value>Repeat password</value>
+    <comment>register_repeat_password</comment>
+  </data>
+  <data name="register_password" xml:space="preserve">
+    <value>Password</value>
+    <comment>register_password</comment>
+  </data>
+  <data name="register_shownname" xml:space="preserve">
+    <value>Shown name</value>
+    <comment>register_shownname</comment>
+  </data>
+  <data name="register_email" xml:space="preserve">
+    <value>E-Mail</value>
+    <comment>register_email</comment>
+  </data>
+  <data name="admin_controlpanel" xml:space="preserve">
+    <value>Control Panel</value>
+    <comment>admin_controlpanel</comment>
+  </data>
+  <data name="admin_projects" xml:space="preserve">
+    <value>Projects</value>
+    <comment>admin_projects</comment>
+  </data>
+  <data name="issue_edit_header" xml:space="preserve">
+    <value>Issue Editing</value>
+    <comment>issue_edit_header</comment>
+  </data>
 </root>

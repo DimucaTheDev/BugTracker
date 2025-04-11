@@ -8,14 +8,14 @@
 }
 @if (httpContextAccessor.HttpContext != null && !httpContextAccessor.HttpContext.User.Identity!.IsAuthenticated) //TODO: if user is not authorized, show login container
 {
-    <Container Title="Авторизация">
+    <Container Title="@(Localizer["overview_authorization"])">
         <div style="margin-left: 50px; top: 10px; width: fit-content">
             <LoginForm />
         </div>
     </Container>
 }
-<PageTitle>Обзор</PageTitle>
-<Container Title="Обзор" BackgroundColor="#c60" TitleColor="#fff">
+<PageTitle>@(Localizer["overview_overview"])</PageTitle>
+<Container Title="@(Localizer["overview_overview"])" BackgroundColor="#c60" TitleColor="#fff">
     <Markdown MarkdownString="@Config.Instance.OverviewMarkdown" />
 </Container>
 

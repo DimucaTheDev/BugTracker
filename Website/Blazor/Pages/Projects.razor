@@ -1,57 +1,57 @@
 ﻿@page "/projects"
 @layout Layout.MainLayout
 
-<PageTitle>Список проектов</PageTitle>
+<PageTitle>@Localizer["projects_title"]</PageTitle>
 
 @if (!DbContext.Projects.Any())
 {
-    <h1 class="no-projects-title"><b>Нет проектов для отображения.</b></h1>
-    <h3 class="no-projects-description">Создайте новый проект на странице <a href="/admin">Администрирования</a>.</h3>
+    <h1 class="no-projects-title"><b>@(Localizer["projects_nothing"])</b></h1>
+    <h3 class="no-projects-description">@(Localizer["projects_nothing_create_new"])</h3>
 }
 else
 {
-    <h5>Все Проекты - @(_searchCategory == 0 ? "Все Категории" : DbContext.ProjectCategories.First(s => s.Id == _searchCategory).Name)</h5>
-    <input style="margin-top: 10px; margin-bottom: 30px" type="text" placeholder="Поиск" @oninput="e => { _searchName = e.Value?.ToString()!; }"/>
-    <br/>
+    <h5>@(Localizer["projects_all", _searchCategory == 0 ? Localizer["projects_all_categories"] : DbContext.ProjectCategories.First(s => s.Id == _searchCategory).Name])</h5>
+    <input style="margin-top: 10px; margin-bottom: 30px" type="text" placeholder="Поиск" @oninput="e => { _searchName = e.Value?.ToString()!; }" />
+    <br />
     <div>
-        Выбрать Категорию:
+        @(Localizer["projects_select_category"])
         <select @bind="_searchCategory">
-            <option value="">All Categories</option>
+            <option value="">@(Localizer["projects_all_categories"])</option>
             @foreach (var category in DbContext.ProjectCategories.Where(s => s.Id != 0))
             {
                 <option value="@category.Id">@category.Name</option>
             }
         </select>
     </div>
-    <br/>
+    <br />
     <table>
         <thead>
-        <tr style="background-color: #d5d5d5; cursor: pointer">
-            <th @onclick='() => SortBy("ProjectName", s => s.ProjectName)'>
-                @($"Проект {(_currentSortColumn == "ProjectName" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
-            </th>
-            <th @onclick='() => SortBy("ProjectCode", s => s.ProjectCode)'>
-                @($"Код {(_currentSortColumn == "ProjectCode" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
-            </th>
-            <th @onclick='() => SortBy("ManagerUser", s => s.ManagerUser?.Username)'>
-                @($"Проектный Менеджер {(_currentSortColumn == "ManagerUser" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
-            </th>
-            <th @onclick='() => SortBy("Category", s => s.Category?.Name)'>
-                @($"Категория {(_currentSortColumn == "Category" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
-            </th>
-            <th @onclick='() => SortBy("ProjectUrl", s => s.ProjectUrl)'>
-                @($"URL Проекта {(_currentSortColumn == "ProjectUrl" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty)}")
-            </th>
-        </tr>
+            <tr style="background-color: #d5d5d5; cursor: pointer">
+                <th @onclick='() => SortBy("ProjectName", s => s.ProjectName)'>
+                    @(Localizer["projects_p_name", _currentSortColumn == "ProjectName" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty])
+                </th>
+                <th @onclick='() => SortBy("ProjectCode", s => s.ProjectCode)'>
+                    @(Localizer["projects_p_code", _currentSortColumn == "ProjectCode" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty])
+                </th>
+                <th @onclick='() => SortBy("ManagerUser", s => s.ManagerUser?.Username)'>
+                    @(Localizer["projects_p_manager", _currentSortColumn == "ManagerUser" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty])
+                </th>
+                <th @onclick='() => SortBy("Category", s => s.Category?.Name)'>
+                    @(Localizer["projects_p_category", _currentSortColumn == "Category" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty])
+                </th>
+                <th @onclick='() => SortBy("ProjectUrl", s => s.ProjectUrl)'>
+                    @(Localizer["projects_p_url", _currentSortColumn == "ProjectUrl" ? (_isSortAscending ? "\u25b2" : "\u25bc") : string.Empty])
+                </th>
+            </tr>
         </thead>
 
         @{
             var l = DbContext.Projects
-                .Include(projectModel => projectModel.Category)
-                .ToList()
-                .Where(s =>
-                    /*  Project Search ---> */s.ProjectName.ToLower().Contains(_searchName.ToLower()) && (_searchCategory == 0 || s.Category?.Id == _searchCategory))
-                .ToList();
+            .Include(projectModel => projectModel.Category)
+            .ToList()
+            .Where(s =>
+            /*  Project Search ---> */s.ProjectName.ToLower().Contains(_searchName.ToLower()) && (_searchCategory == 0 || s.Category?.Id == _searchCategory))
+            .ToList();
             l.Sort(_comparison);
         }
         @foreach (var project in l)
@@ -65,7 +65,7 @@ else
                             var path = $"static/projects/{project.ProjectCode}.png";
                             if (File.Exists(path))
                             {
-                                <img src="/@path" class="icon"/>
+                                <img src="/@path" class="icon" />
                             }
                             else
                             {
@@ -80,17 +80,17 @@ else
                 @{
                     var id = project.ManagerUserId;
                     var user = DbContext.Users
-                        .Include(s => s.UserRank)
-                        .FirstOrDefault(u => u.Id == id);
+                    .Include(s => s.UserRank)
+                    .FirstOrDefault(u => u.Id == id);
                 }
-                <th><AccountBadge User=user/></th>
+                <th><AccountBadge User=user /></th>
                 <th>
                     <span class="@(project.Category?.Id == 0 ? "grayed" : "")">@project.Category?.Name</span>
                 </th>
                 <th>
                     @if (string.IsNullOrWhiteSpace(projectProjectUrl))
                     {
-                        <span class="grayed">Нет URL Проекта</span>
+                        <span class="grayed">@(Localizer["projects_p_no_url"])</span>
                     }
                     else
                     {

@@ -4,23 +4,23 @@
 }
 <div class="login-box" style="width: 100%">
     <form method="post" id="login_form" action="/api/auth/login">
-        <label for="username">Имя пользователя</label>
+        <label for="username">@(Localizer["login_username"])</label>
         <input type="text" id="username" name="username">
 
-        <label for="password">Пароль</label>
+        <label for="password">@(Localizer["login_password"])</label>
         <input type="password" id="password" name="password">
 
         <div>
             <input type="checkbox" id="remember" name="remember">
-            <label for="remember" style="display: inline;">Запомнить это устройство</label>
+            <label for="remember" style="display: inline;">@(Localizer["login_remember"])</label>
         </div>
 
         <div class="actions">
-            <button type="submit">Войти</button>
-            <button type="button" @onclick='() => { Navigation.NavigateTo($"/register?redir={q["redir"]??"/"}"); }' >Зарегистр.</button>
+            <button type="submit">@(Localizer["login_login"])</button>
+            <button type="button" @onclick='() => { Navigation.NavigateTo($"/register?redir={q["redir"]??"/"}"); }' >@(Localizer["login_register"])</button>
         </div>
         <p id="login_error" style="color: red; text-align: center"></p>
-        <a href="/restore">Забыли пароль?</a>
+        <a href="/restore">@(Localizer["login_forgot"])</a>
     </form>
 </div>
 

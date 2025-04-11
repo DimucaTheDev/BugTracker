@@ -8,28 +8,28 @@
 }
 <div class="login-box" style="width: 100%">
     <form method="post" id="login_form" action="/api/auth/register">
-        <label for="username"><b>Username</b></label>
+        <label for="username"><b>@(Localizer["register_username"])</b></label>
         <input type="text" id="username" name="username" @bind="_name">
 
-        <label for="email"><b>E-Mail</b></label>
+        <label for="email"><b>@(Localizer["register_email"])</b></label>
         <input type="email" id="email" name="email">
 
-        <label for="shown_name">Shown Name</label>
+        <label for="shown_name">@(Localizer["register_shownname"])</label>
         <input type="text" id="shown_name" name="shown_name" placeholder="@(_name)">
 
-        <label for="password"><b>Password</b></label>
+        <label for="password"><b>@(Localizer["register_password"])</b></label>
         <input type="password" id="password" name="password">
 
-        <label for="repeat_password"><b>Repeat Password</b></label>
+        <label for="repeat_password"><b>@(Localizer["register_repeat_password"])</b></label>
         <input type="password" id="repeat_password" name="repeat_password">
 
         @* captcha here *@
 
         <div class="actions">
-            <button type="submit">Register</button>
+            <button type="submit">@(Localizer["register_register"])</button>
         </div>
         <p id="login_error" style="color: red; text-align: center"></p>
     </form>
-    <a href="@($"/login?redir={q["redir"]??"/"}")">Already have an Account?</a>
+    <a href="@($"/login?redir={q["redir"]??"/"}")">@(Localizer["register_have_account"])</a>
 </div>
 <script>post_login_form();</script>

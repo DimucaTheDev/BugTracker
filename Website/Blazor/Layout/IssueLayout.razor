@@ -21,7 +21,7 @@
                     <img src="bt_brand_transparent_placeholder.png" style="margin: 0; max-width: 100%; max-width: 100%; display: block" />
                 </a>
                 <div style="left: 100%; position: sticky">
-                    <a href="/createIssue" class="btn-top">Создать Задачу</a>
+                    <a href="/createIssue" class="btn-top">@(Localizer["top_createissue"])</a>
                     @if (HttpContext.HttpContext != null && HttpContext.HttpContext.User.Identity!.IsAuthenticated)
                     {
                             <AccountBadge User="user" />
@@ -29,8 +29,8 @@
                     }
                     else
                     {
-                            <a href="/login?redir=/" class="btn-top">Вход</a>
-                            <a href="/register?redir=/" class="btn-top">Регистрация</a>
+                            <a href="/login?redir=/" class="btn-top">@(Localizer["top_login"])</a>
+                            <a href="/register?redir=/" class="btn-top">@(Localizer["top_register"])</a>
                     }
                 </div>
             </div>  
