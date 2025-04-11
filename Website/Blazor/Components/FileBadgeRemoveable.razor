@@ -2,7 +2,7 @@
 {
     <span title="@($"File:\"{FileModel.FileName}\" id:{FileModel.Guid}")"
           class="link file-item"
-          @onmouseover='() => HoverText = "Удалить файл?"'
+          @onmouseover='() => HoverText = Localizer["filebagde_delete"]'
           @onmouseout="() => HoverText = FileModel.FileName"
           @onclick="RemoveFile">
         <span class="bg">
@@ -24,8 +24,8 @@
 else
 {
     <span title="File not exists or broken link" class="link grayed"
-          @onmouseover='() => HoverText = "Удалить файл?"'
-          @onmouseout='() => HoverText = "Файл не найден"'
+          @onmouseover='() => HoverText = Localizer["filebadge_delete"]'
+          @onmouseout='() => HoverText = Localizer["filebadge_not_found"]'
           @onclick="RemoveFile">
         <span class="bg">
             <img class="user-icon" src="/fileformat/broken.png" />
@@ -39,7 +39,7 @@ else
 
     protected override void OnInitialized()
     {
-        HoverText = FileModel?.FileName ?? "Файл не найден";
+        HoverText = FileModel?.FileName ?? Localizer["filebadge_not_found"];
     }
 
     void RemoveFile()
