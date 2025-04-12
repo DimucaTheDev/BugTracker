@@ -185,19 +185,19 @@
     <value>All categories</value>
   </data>
   <data name="projects_p_name" xml:space="preserve">
-    <value>Project</value>
+    <value>Project {0}</value>
   </data>
   <data name="projects_p_code" xml:space="preserve">
-    <value>Code</value>
+    <value>Code {0}</value>
   </data>
   <data name="projects_p_manager" xml:space="preserve">
-    <value>Project Manager</value>
+    <value>Project Manager {0}</value>
   </data>
   <data name="projects_p_category" xml:space="preserve">
-    <value>Category</value>
+    <value>Category {0}</value>
   </data>
   <data name="projects_p_url" xml:space="preserve">
-    <value>Project URL</value>
+    <value>Project URL {0}</value>
   </data>
   <data name="projects_p_no_url" xml:space="preserve">
     <value>No Project URL</value>

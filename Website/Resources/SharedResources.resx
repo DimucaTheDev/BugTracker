@@ -184,19 +184,19 @@
     <value>Все категории</value>
   </data>
   <data name="projects_p_name" xml:space="preserve">
-    <value>Проект</value>
+    <value>Проект {0}</value>
   </data>
   <data name="projects_p_code" xml:space="preserve">
-    <value>Код</value>
+    <value>Код {0}</value>
   </data>
   <data name="projects_p_manager" xml:space="preserve">
-    <value>Проектный Менеджер</value>
+    <value>Проектный Менеджер {0}</value>
   </data>
   <data name="projects_p_category" xml:space="preserve">
-    <value>Категория</value>
+    <value>Категория {0}</value>
   </data>
   <data name="projects_p_url" xml:space="preserve">
-    <value>URL Проекта</value>
+    <value>URL Проекта {0}</value>
   </data>
   <data name="projects_p_no_url" xml:space="preserve">
     <value>Нет URL Проекта</value>

@@ -1,0 +1,82 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Localization
+<div id="langDropdown" class="language-dropdown">
+    <button @onclick="ToggleDropdown" class="dropdown-toggle">
+        @GetFlag(CurrentCulture) @GetLanguageName(CurrentCulture)
+    </button>
+
+    @if (IsOpen)
+    {
+        <ul class="lang-dropdown-menu">
+            @foreach (var culture in SupportedCultures)
+            {
+                <li>
+                    <button @onclick="() => SetLanguage(culture)" class="dropdown-item">
+                        @if (CurrentCulture == culture)
+                        {
+                            <span>@GetFlag(culture) <b>@GetLanguageName(culture)</b></span>
+                        }
+                        else
+                        {
+                            <span>@GetFlag(culture) @GetLanguageName(culture)</span>
+                        }
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    [Inject] ILanguageService Lang { get; set; }
+    private bool IsOpen = false;
+    private string ElementId = "langDropdown";
+    private List<string> SupportedCultures = ["en-US", "ru-RU"];
+    private string CurrentCulture => CultureInfo.CurrentCulture.Name;
+    private async Task ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+
+        if (IsOpen)
+        {
+            await JsRuntime.InvokeVoidAsync("langDropdown.registerOutsideClickHandler",
+                DotNetObjectReference.Create(this), ElementId);
+        }
+        else
+        {
+            await JsRuntime.InvokeVoidAsync("langDropdown.unregisterOutsideClickHandler");
+        }
+    }
+    private async Task SetLanguage(string culture)
+    {
+        IsOpen = false;
+        await JsRuntime.InvokeVoidAsync("langDropdown.unregisterOutsideClickHandler");
+
+        if (!string.IsNullOrWhiteSpace(culture))
+        {
+            var uri = new Uri(Navigation.Uri)
+                .GetLeftPart(UriPartial.Path);
+            await Lang.SetCultureAsync(culture);
+            Navigation.NavigateTo(uri, forceLoad: true);
+        }
+    }
+    [JSInvokable]
+    public async Task CloseDropdown()
+    {
+        IsOpen = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    private string GetFlag(string culture) => culture switch
+    {
+        "en-US" => "🇬🇧",
+        "ru-RU" => "🇷🇺",
+        _ => "🌐"
+    };
+
+    private string GetLanguageName(string culture) => culture switch
+    {
+        "en-US" => "English",
+        "ru-RU" => "Русский",
+        _ => culture
+    };
+}

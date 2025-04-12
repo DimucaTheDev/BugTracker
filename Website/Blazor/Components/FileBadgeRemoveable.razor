@@ -2,7 +2,7 @@
 {
     <span title="@($"File:\"{FileModel.FileName}\" id:{FileModel.Guid}")"
           class="link file-item"
-          @onmouseover='() => HoverText = Localizer["filebagde_delete"]'
+          @onmouseover='() => HoverText = Localizer["filebadge_delete"]'
           @onmouseout="() => HoverText = FileModel.FileName"
           @onclick="RemoveFile">
         <span class="bg">

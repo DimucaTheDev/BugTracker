@@ -29,3 +29,25 @@ window.clearMathJax = () => {
 window.openNewWindow = (url, width, height) => {
     window.open(url, "_blank", `width=${width},height=${height},resizable=yes,scrollbars=yes`);
 };
+
+window.langDropdown = {
+    registerOutsideClickHandler: function (dotNetRef, elementId) {
+        function handleClick(event) { 
+            const dropdown = document.getElementById(elementId);
+            if (dropdown && !dropdown.contains(event.target)) { 
+                dotNetRef.invokeMethodAsync("CloseDropdown");
+            }
+        } 
+        document.addEventListener("mousedown", handleClick);
+
+        // Сохраняем обработчик для возможного удаления
+        window._langDropdownHandler = handleClick;
+    },
+
+    unregisterOutsideClickHandler: function () {
+        if (window._langDropdownHandler) {
+            document.removeEventListener("mousedown", window._langDropdownHandler);
+            window._langDropdownHandler = null;
+        }
+    }
+};

@@ -205,7 +205,7 @@
         var context = HttpContextAccessor.HttpContext;
         if (context == null || !context.Request.TryAuthenticate(out _))
         {
-            Navigation.NavigateTo("/login?redir=/createTask", true);
+            Navigation.NavigateTo($"/login?redir=/issue/{ProjectCode}-{IssueId}/edit", true);
             return;
         }
     }
