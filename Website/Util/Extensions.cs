@@ -70,11 +70,11 @@ namespace Website.Util
         {
             return type switch
             {
-                IssueType.None => "Не задано",
-                IssueType.Bug => "Ошибка",
-                IssueType.FeatureRequest => "Запрос фичи",
-                IssueType.Improvement => "Улучшение",
-                IssueType.Critical => "Критическая ошибка",
+                IssueType.None => "type_not_specified",
+                IssueType.Bug => "type_bug",
+                IssueType.FeatureRequest => "type_feature",
+                IssueType.Improvement => "type_improvement",
+                IssueType.Critical => "type_crit",
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -83,15 +83,15 @@ namespace Website.Util
         {
             return solution switch
             {
-                IssueSolution.None => "Нет решения",
-                IssueSolution.Duplicate => "Дубликат",
-                IssueSolution.AwaitingResponse => "Ожидает ответа",
-                IssueSolution.Invalid => "Некорректная задача",
-                IssueSolution.Fixed => "Исправлено",
-                IssueSolution.WontFix => "Не будет исправлено",
-                IssueSolution.Deferred => "Отложено",
-                IssueSolution.NotABug => "Не является багом",
-                _ => "Неизвестное решение" // На случай, если будет добавлено новое значение
+                IssueSolution.None => "solution_no",
+                IssueSolution.Duplicate => "solution_dupe",
+                IssueSolution.AwaitingResponse => "solution_wait",
+                IssueSolution.Invalid => "solution_bad",
+                IssueSolution.Fixed => "solution_fixed",
+                IssueSolution.WontFix => "solution_wont_fixed",
+                IssueSolution.Deferred => "solution_deferred",
+                IssueSolution.NotABug => "solution_not_bug",
+                _ => "solution_unknown" // На случай, если будет добавлено новое значение
             };
         }
 
@@ -99,36 +99,37 @@ namespace Website.Util
         {
             return status switch
             {
-                IssueStatus.Open => "Открыто",
-                IssueStatus.Resolved => "Решено",
-                IssueStatus.InProgress => "В работе",
-                IssueStatus.Confirmed => "Подтверждено",
-                IssueStatus.Closed => "Закрыто",
-                IssueStatus.AwaitingConfirmation => "Ожидает подтверждения",
-                IssueStatus.AwaitingTesting => "Ожидает тестирования",
-                IssueStatus.Deferred => "Отложено",
-                IssueStatus.CannotReproduce => "Не удается воспроизвести",
-                IssueStatus.Cancelled => "Отменено",
-                IssueStatus.WontFix => "Не будет исправлено",
-
-                _ => "Неизвестно"
+                IssueStatus.Open => "status_open",
+                IssueStatus.Resolved => "status_resolved",
+                IssueStatus.InProgress => "status_in_progress",
+                IssueStatus.Confirmed => "status_confirmed",
+                IssueStatus.Closed => "status_closed",
+                IssueStatus.AwaitingConfirmation => "status_awaiting_confirmation",
+                IssueStatus.AwaitingTesting => "status_awaiting_testing",
+                IssueStatus.Deferred => "status_deferred",
+                IssueStatus.CannotReproduce => "status_cannot_reproduce",
+                IssueStatus.Cancelled => "status_cancelled",
+                IssueStatus.WontFix => "status_wont_fix",
+                _ => "status_unknown"
             };
         }
+
 
         public static string GetIssueConfirmation(this ConfirmationStatus status)
         {
             return status switch
             {
-                ConfirmationStatus.None => "Не задано",
-                ConfirmationStatus.Confirmed => "Подтверждено",
-                ConfirmationStatus.AwaitingConfirmation => "Ожидает подтверждения",
-                ConfirmationStatus.Rejected => "Отклонено",
-                ConfirmationStatus.InProgress => "В работе",
-                ConfirmationStatus.NeedsReview => "Требует проверки",
-                ConfirmationStatus.CannotReproduce => "Не удается воспроизвести",
-                _ => "Неизвестно"
+                ConfirmationStatus.None => "confirmation_none",
+                ConfirmationStatus.Confirmed => "confirmation_confirmed",
+                ConfirmationStatus.AwaitingConfirmation => "confirmation_awaiting_confirmation",
+                ConfirmationStatus.Rejected => "confirmation_rejected",
+                ConfirmationStatus.InProgress => "confirmation_in_progress",
+                ConfirmationStatus.NeedsReview => "confirmation_needs_review",
+                ConfirmationStatus.CannotReproduce => "confirmation_cannot_reproduce",
+                _ => "confirmation_unknown"
             };
         }
+
         public static string SetData(this HttpResponse response, string? id, dynamic data)
         {
             // Serialize and encrypt data before setting it in the cookie

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using Website.Data;
 using Website.Model;
 using Website.Util;
@@ -10,11 +11,31 @@ namespace Website.Controllers
     public class IssuesController(DatabaseContext database) : Controller
     {
         private readonly DatabaseContext _database = database;
+        public class CreateIssueDto
+        {
+            [Required]
+            public string ProjectCode { get; set; }
+            public IssueType IssueType { get; set; }
+            [Required]
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public List<string>? SelectedItems { get; set; } = [];
+            public IFormFileCollection? Files { get; set; } = new FormFileCollection();
+        }
 
         [Auth]
         [HttpPost("create")]
-        public IActionResult CreateIssue([FromForm] string projectCode, [FromForm] IssueType issueType, [FromForm] string title, [FromForm] string description, [FromForm] List<string> selectedItems, IFormFileCollection files)
+        public IActionResult CreateIssue([FromForm] CreateIssueDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var projectCode = dto.ProjectCode;
+            var issueType = dto.IssueType;
+            var title = dto.Title;
+            var description = dto.Description;
+            var selectedItems = dto.SelectedItems;
+            var files = dto.Files;
+
             ProjectModel? project = _database.Projects.FirstOrDefault(s => s.ProjectCode == projectCode);
             if (project == null) return BadRequest(new { description = "Project not exists" });
             List<int> versions = new();
@@ -64,16 +85,40 @@ namespace Website.Controllers
             _database.SaveChanges();
             return Ok(new { redir = $"/issue/{projectCode}-{issue.IssueId}" });
         }
+        public class EditIssueDto
+        {
+            [Required]
+            public string IssueGuid { get; set; }
+            public IssueType IssueType { get; set; }
+            [Required]
+            public string Title { get; set; }
+            public string? Description { get; set; }
+            public List<string>? SelectedItems { get; set; } = [];
+            public string? FixedIn { get; set; }
+            public string? IssueConfirmation { get; set; }
+            public string? IssueSolution { get; set; }
+            public string? IssueStatus { get; set; }
+            public IFormFileCollection? Files { get; set; } = new FormFileCollection();
+        }
 
         [Auth]
         [HttpPost("edit")]
-        public IActionResult EditIssue(
-            [FromForm] string issueGuid, [FromForm] IssueType issueType, [FromForm] string title,
-            [FromForm] string description, [FromForm] List<string> selectedItems, [FromForm] string fixedIn,
-            [FromForm] string issueConfirmation, [FromForm] string issueSolution, [FromForm] string issueStatus, IFormFileCollection files)
+        public IActionResult EditIssue([FromForm] EditIssueDto dto)
         {
-            var keepFiles = Request.Form.Where(s => s.Key.StartsWith("keepfile-")).Select(s => s.Key.Replace("keepfile-", "")).ToList();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var issueGuid = dto.IssueGuid;
+            var files = dto.Files;
+            var description = dto.Description;
+            var title = dto.Title;
+            var issueType = dto.IssueType;
+            var selectedItems = dto.SelectedItems;
+            var fixedIn = dto.FixedIn;
+            var issueConfirmation = dto.IssueConfirmation;
+            var issueSolution = dto.IssueSolution;
+            var issueStatus = dto.IssueStatus;
 
+            var keepFiles = Request.Form.Where(s => s.Key.StartsWith("keepfile-")).Select(s => s.Key.Replace("keepfile-", "")).ToList();
             var issue = _database.Issues
                 .Include(s => s.Project)
                 .FirstOrDefault(s => s.Uuid.Equals(new Guid(issueGuid)));

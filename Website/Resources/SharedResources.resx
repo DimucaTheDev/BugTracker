@@ -264,4 +264,176 @@
     <value>Редактирование Задачи</value>
     <comment>issue_edit_header</comment>
   </data>
+  <data name="issue_edit" xml:space="preserve">
+    <value>Редактирование</value>
+    <comment>issue_edit</comment>
+  </data>
+  <data name="issue_not_exists" xml:space="preserve">
+    <value>Задачи не существует или доступ к ней ограничен.</value>
+    <comment>issue_not_exists</comment>
+  </data>
+  <data name="issue_details" xml:space="preserve">
+    <value>Детали задачи</value>
+  </data>
+  <data name="issue_type" xml:space="preserve">
+    <value>Тип:</value>
+  </data>
+  <data name="issue_created" xml:space="preserve">
+    <value>Создано: {0:G}</value>
+  </data>
+  <data name="issue_status" xml:space="preserve">
+    <value>Состояние:</value>
+  </data>
+  <data name="issue_solution" xml:space="preserve">
+    <value>Решение:</value>
+  </data>
+  <data name="issue_fixedin" xml:space="preserve">
+    <value>Исправлено в версии:</value>
+  </data>
+  <data name="issue_not_fixed" xml:space="preserve">
+    <value>Не исправлено</value>
+  </data>
+  <data name="issue_affected" xml:space="preserve">
+    <value>Затронуто в версиях:</value>
+  </data>
+  <data name="issue_affected_not" xml:space="preserve">
+    <value>Не указано</value>
+  </data>
+  <data name="issue_confirmation" xml:space="preserve">
+    <value>Статус подтверждения:</value>
+  </data>
+  <data name="issue_description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="issue_no_description" xml:space="preserve">
+    <value>Описание задачи не указано</value>
+  </data>
+  <data name="issue_attached" xml:space="preserve">
+    <value>Прикреплённые фалйы</value>
+  </data>
+  <data name="issue_author" xml:space="preserve">
+    <value>Автор:</value>
+  </data>
+  <data name="issue_assigned" xml:space="preserve">
+    <value>Исполнитель:</value>
+  </data>
+  <data name="issue_not_assigned" xml:space="preserve">
+    <value>Не назначен</value>
+  </data>
+  <data name="issue_updated" xml:space="preserve">
+    <value>Обновлено: {0:G}</value>
+  </data>
+  <data name="lang_name" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="type_not_specified" xml:space="preserve">
+    <value>Не задано</value>
+  </data>
+  <data name="type_bug" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="type_feature" xml:space="preserve">
+    <value>Запрос фичи</value>
+  </data>
+  <data name="type_improvement" xml:space="preserve">
+    <value>Улучшение</value>
+  </data>
+  <data name="type_crit" xml:space="preserve">
+    <value>Критическая ошибка</value>
+  </data>
+  <data name="solution_no" xml:space="preserve">
+    <value>Нет решения</value>
+  </data>
+  <data name="solution_dupe" xml:space="preserve">
+    <value>Дубликат</value>
+  </data>
+  <data name="solution_wait" xml:space="preserve">
+    <value>Ожидает ответа</value>
+  </data>
+  <data name="solution_bad" xml:space="preserve">
+    <value>Некорректная задача</value>
+  </data>
+  <data name="solution_fixed" xml:space="preserve">
+    <value>Исправлено</value>
+  </data>
+  <data name="solution_wont_fixed" xml:space="preserve">
+    <value>Не будет исправлено</value>
+  </data>
+  <data name="solution_deferred" xml:space="preserve">
+    <value>Отложено</value>
+  </data>
+  <data name="solution_not_bug" xml:space="preserve">
+    <value>Не ошибка</value>
+  </data>
+  <data name="solution_unknown" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="status_open" xml:space="preserve">
+    <value>Открыто</value>
+  </data>
+  <data name="status_resolved" xml:space="preserve">
+    <value>Решено</value>
+  </data>
+  <data name="status_in_progress" xml:space="preserve">
+    <value>В работе</value>
+  </data>
+  <data name="status_confirmed" xml:space="preserve">
+    <value>Подтверждено</value>
+  </data>
+  <data name="status_closed" xml:space="preserve">
+    <value>Закрыто</value>
+  </data>
+  <data name="status_awaiting_confirmation" xml:space="preserve">
+    <value>Ожидает подтверждения</value>
+  </data>
+  <data name="status_awaiting_testing" xml:space="preserve">
+    <value>Ожидает тестирования</value>
+  </data>
+  <data name="status_deferred" xml:space="preserve">
+    <value>Отложено</value>
+  </data>
+  <data name="status_cannot_reproduce" xml:space="preserve">
+    <value>Не удается воспроизвести</value>
+  </data>
+  <data name="status_cancelled" xml:space="preserve">
+    <value>Отменено</value>
+  </data>
+  <data name="status_wont_fix" xml:space="preserve">
+    <value>Не будет исправлено</value>
+  </data>
+  <data name="status_unknown" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="confirmation_none" xml:space="preserve">
+    <value>Не указано</value>
+  </data>
+  <data name="confirmation_confirmed" xml:space="preserve">
+    <value>Подтверждено</value>
+  </data>
+  <data name="confirmation_awaiting_confirmation" xml:space="preserve">
+    <value>Ожидает подтверждения</value>
+  </data>
+  <data name="confirmation_rejected" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="confirmation_in_progress" xml:space="preserve">
+    <value>В работе</value>
+  </data>
+  <data name="confirmation_needs_review" xml:space="preserve">
+    <value>Требует проверки</value>
+  </data>
+  <data name="confirmation_cannot_reproduce" xml:space="preserve">
+    <value>Не удается воспроизвести</value>
+  </data>
+  <data name="confirmation_unknown" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="issue_self_assign" xml:space="preserve">
+    <value>Стать исполнителем?</value>
+    <comment>issue_self_assign</comment>
+  </data>
+  <data name="issue_users" xml:space="preserve">
+    <value>Пользователи</value>
+    <comment>issue_users</comment>
+  </data>
 </root>

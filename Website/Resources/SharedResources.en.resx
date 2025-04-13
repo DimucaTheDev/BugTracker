@@ -265,4 +265,193 @@
     <value>Issue Editing</value>
     <comment>issue_edit_header</comment>
   </data>
+  <data name="issue_edit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>issue_edit</comment>
+  </data>
+  <data name="issue_not_exists" xml:space="preserve">
+    <value>The issue does not exist or is unavaliable.</value>
+    <comment>issue_not_exists</comment>
+  </data>
+  <data name="issue_details" xml:space="preserve">
+    <value>Issue details</value>
+    <comment>issue_details</comment>
+  </data>
+  <data name="issue_type" xml:space="preserve">
+    <value>Type:</value>
+    <comment>issue_type</comment>
+  </data>
+  <data name="issue_created" xml:space="preserve">
+    <value>Created: {0:G}</value>
+    <comment>issue_created</comment>
+  </data>
+  <data name="issue_status" xml:space="preserve">
+    <value>Status:</value>
+    <comment>issue_status</comment>
+  </data>
+  <data name="issue_solution" xml:space="preserve">
+    <value>Solution:</value>
+    <comment>issue_solution</comment>
+  </data>
+  <data name="issue_fixedin" xml:space="preserve">
+    <value>Fixed in version:</value>
+    <comment>issue_fixedin</comment>
+  </data>
+  <data name="issue_not_fixed" xml:space="preserve">
+    <value>Not fixed</value>
+    <comment>issue_not_fixed</comment>
+  </data>
+  <data name="issue_affected" xml:space="preserve">
+    <value>Affected versions:</value>
+    <comment>issue_affected</comment>
+  </data>
+  <data name="issue_affected_not" xml:space="preserve">
+    <value>Unspecified</value>
+    <comment>issue_affected_not</comment>
+  </data>
+  <data name="issue_confirmation" xml:space="preserve">
+    <value>Confirmation:</value>
+    <comment>issue_confirmation</comment>
+  </data>
+  <data name="issue_description" xml:space="preserve">
+    <value>Description</value>
+    <comment>issue_description</comment>
+  </data>
+  <data name="issue_no_description" xml:space="preserve">
+    <value>Description is not specified</value>
+    <comment>issue_no_description</comment>
+  </data>
+  <data name="issue_attached" xml:space="preserve">
+    <value>Attached files</value>
+    <comment>issue_attached</comment>
+  </data>
+  <data name="issue_author" xml:space="preserve">
+    <value>Author:</value>
+    <comment>issue_author</comment>
+  </data>
+  <data name="issue_assigned" xml:space="preserve">
+    <value>Assigned:</value>
+    <comment>issue_assigned</comment>
+  </data>
+  <data name="issue_not_assigned" xml:space="preserve">
+    <value>Not assigned</value>
+    <comment>issue_not_assigned</comment>
+  </data>
+  <data name="issue_updated" xml:space="preserve">
+    <value>Updated: {0:G}</value>
+    <comment>issue_updated</comment>
+  </data>
+  <data name="lang_name" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="type_not_specified" xml:space="preserve">
+    <value>Not specified</value>
+  </data>
+  <data name="type_bug" xml:space="preserve">
+    <value>Bug</value>
+  </data>
+  <data name="type_feature" xml:space="preserve">
+    <value>Feature request</value>
+  </data>
+  <data name="type_improvement" xml:space="preserve">
+    <value>Improvement</value>
+  </data>
+  <data name="type_crit" xml:space="preserve">
+    <value>Critical bug</value>
+  </data>
+  <data name="solution_no" xml:space="preserve">
+    <value>No solution</value>
+  </data>
+  <data name="solution_dupe" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="solution_wait" xml:space="preserve">
+    <value>Awaiting response</value>
+  </data>
+  <data name="solution_bad" xml:space="preserve">
+    <value>Invalid issue</value>
+  </data>
+  <data name="solution_fixed" xml:space="preserve">
+    <value>Fixed</value>
+  </data>
+  <data name="solution_wont_fixed" xml:space="preserve">
+    <value>Will not fix</value>
+  </data>
+  <data name="solution_deferred" xml:space="preserve">
+    <value>Deferred</value>
+  </data>
+  <data name="solution_not_bug" xml:space="preserve">
+    <value>Not a bug</value>
+  </data>
+  <data name="solution_unknown" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="status_open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="status_resolved" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="status_in_progress" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="status_confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="status_closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="status_awaiting_confirmation" xml:space="preserve">
+    <value>Awaiting confirmation</value>
+  </data>
+  <data name="status_awaiting_testing" xml:space="preserve">
+    <value>Awaiting testing</value>
+  </data>
+  <data name="status_deferred" xml:space="preserve">
+    <value>Deferred</value>
+  </data>
+  <data name="status_cannot_reproduce" xml:space="preserve">
+    <value>Can't reproduce</value>
+  </data>
+  <data name="status_cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="status_wont_fix" xml:space="preserve">
+    <value>Will not fix</value>
+  </data>
+  <data name="status_unknown" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="confirmation_none" xml:space="preserve">
+    <value>Not specified</value>
+  </data>
+  <data name="confirmation_confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="confirmation_awaiting_confirmation" xml:space="preserve">
+    <value>Awaiting confirmation</value>
+  </data>
+  <data name="confirmation_rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="confirmation_in_progress" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="confirmation_needs_review" xml:space="preserve">
+    <value>Needs review</value>
+  </data>
+  <data name="confirmation_cannot_reproduce" xml:space="preserve">
+    <value>Can't reproduce</value>
+  </data>
+  <data name="confirmation_unknown" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="issue_self_assign" xml:space="preserve">
+    <value>Assign yourself?</value>
+    <comment>issue_self_assign</comment>
+  </data>
+  <data name="issue_users" xml:space="preserve">
+    <value>Users</value>
+    <comment>issue_users</comment>
+  </data>
 </root>

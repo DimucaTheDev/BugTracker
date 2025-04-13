@@ -6,7 +6,7 @@
 }
 @if (_selectedIssue == null)
 {
-    <h1>Задачи не существует, или доступ к ней ограничен.</h1>
+    <h1>@Localizer["issue_not_exists"]</h1>
     return;
 }
 
@@ -21,7 +21,7 @@
         <div class="header-controls">
             <p class="subtitle">@(_selectedIssue.Title)</p>
             <a href="/issue/@(_project.ProjectCode)-@(_selectedIssue.IssueId)/edit" class="edit-button">
-                Редактирование
+                @Localizer["issue_edit"]
             </a>
         </div>
     </div>
@@ -30,22 +30,22 @@
 <div style="display: flex; height: 100vh; overflow: hidden;">
     <div id="left" style="flex: 4; overflow-y: auto; border-right: 1px solid #ccc; padding: 10px;">
         <div style="margin-left: 20px">
-            <Container BackgroundColor="#213a9c" TitleColor="#fff" Title="Детали задачи" Width="calc(100% - 20px)">
+            <Container BackgroundColor="#213a9c" TitleColor="#fff" Title=@Localizer["issue_details"] Width="calc(100% - 20px)">
                 <table>
                     <tr>
-                        <td style="color: #7a7a7a">Тип:</td>
-                        <td><img src="@(_selectedIssue.IssueType.GetIssueTypeIconPath())" height="16px" width="16px" /> @(_selectedIssue.IssueType.GetIssueTypeName())</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_type"]</td>
+                        <td><img src="@(_selectedIssue.IssueType.GetIssueTypeIconPath())" height="16px" width="16px" /> @(Localizer[_selectedIssue.IssueType.GetIssueTypeName()])</td>
                     </tr>
                     <tr>
-                        <td style="color: #7a7a7a">Состояние:</td>
-                        <td>@(_selectedIssue.Status.GetIssueStatusName())</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_status"]</td>
+                        <td>@(Localizer[_selectedIssue.Status.GetIssueStatusName()])</td>
                     </tr>
                     <tr>
-                        <td style="color: #7a7a7a">Решение:</td>
-                        <td>@(_selectedIssue.Solution.GetIssueSolutionName())</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_solution"]</td>
+                        <td>@(Localizer[_selectedIssue.Solution.GetIssueSolutionName()])</td>
                     </tr>
                     <tr>
-                        <td style="color: #7a7a7a">Исправлено в версии:</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_fixedin"]</td>
                         <td>
                             @if (_selectedIssue.FixedInVersion != null)
                             {
@@ -53,26 +53,26 @@
                             }
                             else
                             {
-                                <i>Не исправлено</i>
+                                <i>@Localizer["issue_not_fixed"]</i>
                             }
                         </td>
                     </tr>
                     <tr>
-                        <td style="color: #7a7a7a">Затронуто в версиях:</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_affected"]</td>
                         <td>
-                            @if (_selectedIssue.AffectedVersionIds != null)
+                            @if (_selectedIssue.AffectedVersionIds?.Any() ?? false)
                             {
                                 @(string.Join(", ", _selectedIssue.AffectedVersionIds.Select(s => Database.Versions.First(v => v.Id == s).Name)))
                             }
                             else
                             {
-                                <i>Не указано</i>
+                                <i>@Localizer["issue_affected_not"]</i>
                             }
                         </td>
                     </tr>
                     <tr>
-                        <td style="color: #7a7a7a">Статус подтверждения:</td>
-                        <td>@(_selectedIssue.ConfirmationStatus.GetIssueConfirmation())</td>
+                        <td style="color: #7a7a7a">@Localizer["issue_confirmation"]</td>
+                        <td>@(Localizer[_selectedIssue.ConfirmationStatus.GetIssueConfirmation()])</td>
                     </tr>
                 </table>
             </Container>
@@ -80,7 +80,7 @@
         <div style="margin-left: 20px">
             @if (!string.IsNullOrWhiteSpace(_selectedIssue.Description))
             {
-                <Container BackgroundColor="#213a9c" TitleColor="#fff" Title="Описание" Width="calc(100% - 20px)">
+                <Container BackgroundColor="#213a9c" TitleColor="#fff" Title=@Localizer["issue_description"] Width="calc(100% - 20px)">
                     <p>
                         <Markdown MarkdownString="@(_selectedIssue.Description.Replace("\\n", ""))" />
                     </p>
@@ -88,13 +88,13 @@
             }
             else
             {
-                <p style="color: gray"><i>Описание задачи не задано.</i></p>
+                <p style="color: gray"><i>@Localizer["issue_no_description"]</i></p>
             }
         </div>
         @if (_selectedIssue.AttachedFiles is { Count: > 0 })
         {
             <div style="margin-left: 20px;">
-                <Container Overflow="auto" BackgroundColor="#213a9c" TitleColor="#fff" Title="Прикреплённые файлы" Width="calc(100% - 20px)">
+                <Container Overflow="auto" BackgroundColor="#213a9c" TitleColor="#fff" Title=@Localizer["issue_attached"] Width="calc(100% - 20px)">
                     <div style="width: 100%; height: 100%; display: flex;flex-wrap: wrap;gap: 10px;">
                         @foreach (var file in _selectedIssue.AttachedFiles ?? [])
                         {
@@ -108,14 +108,14 @@
         }
     </div>
     <div id="right" style="flex: 1; overflow-y: auto; min-width: fit-content; padding: 10px;">
-        <Container BackgroundColor="#213a9c" TitleColor="#fff" Width="100%" Title="Пользователи">
+        <Container BackgroundColor="#213a9c" TitleColor="#fff" Width="100%" Title=@Localizer["issue_users"]>
             <table style="border-collapse: separate;border-spacing: 0 5px; margin-right: 10px">
                 <tr>
-                    <td>Автор:</td>
+                    <td>@(Localizer["issue_author"])</td>
                     <td><AccountBadge User="_selectedIssue.UserCreated" /></td>
                 </tr>
                 <tr>
-                    <td>Исполнитель:</td>
+                    <td>@Localizer["issue_assigned"]</td>
                     <td>
                         @if (_selectedIssue.UserAssigned != null)
                         {
@@ -125,21 +125,21 @@
                         {
                             @if (_currentUser != null)
                             {
-                                <a class="assign-self" @onclick="BecomeAssignee"><i @onmouseenter='() => _message = "Стать исполнителем?"' @onmouseleave='() => _message = "Не назначен"'>@_message</i> </a>
+                                <a class="assign-self" @onclick="BecomeAssignee"><i @onmouseenter='() => _message = Localizer["issue_self_assign"]' @onmouseleave='() => _message = Localizer["issue_not_assigned"]'>@_message</i> </a>
                             }
                             else
                             {
-                                <i>Не назначен</i>
+                                <i>@Localizer["issue_not_assigned"]</i>
                             }
                         }
                     </td>
                 </tr>
             </table>
         </Container>
-        <p>Создано: @(_selectedIssue.CreatedAt.ToString("G", new CultureInfo("ru-RU")))</p>
+        <p>@Localizer["issue_created", _selectedIssue.CreatedAt]</p>
         @if (_selectedIssue.UpdatedAt != null)
         {
-            <p>Обновлено: @(_selectedIssue.UpdatedAt?.ToString("G", new CultureInfo("ru-RU")))</p>
+            <p>@Localizer["issue_updated", _selectedIssue.UpdatedAt]</p>
         }
     </div>
 </div>
@@ -154,10 +154,11 @@
     [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
     private IssueModel? _selectedIssue;
     private ProjectModel? _project;
-    private string _message = "Не назначен";
+    private string _message;
     private UserModel? _currentUser;
     protected override void OnParametersSet()
     {
+        _message = Localizer["issue_not_assigned"];
         _selectedIssue = Database.Issues
             .Include(i => i.UserCreated)
             .Include(i => i.UserAssigned)
