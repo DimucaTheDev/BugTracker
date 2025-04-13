@@ -1,4 +1,4 @@
-﻿@page "/issue/{ProjectCode}-{IssueId:int}/edit" 
+﻿@page "/issue/{ProjectCode}-{IssueId:int}/edit"
 @inject IHttpContextAccessor HttpContextAccessor
 @layout FixIssueLayout
 @attribute [Auth]
@@ -7,150 +7,150 @@
 .Include(s => s.Project)
 .Any(s => s.Project!.ProjectCode == ProjectCode && s.IssueId == IssueId))
 {
-        <NotFoundPage />
+    <NotFoundPage />
     return;
 }
 <div class="cont">
-<div class="flex">
-    <div class="center">
-        <h3 class="center-text">
-            @Localizer["issue_edit_header"] <b>@(ProjectCode)-@(IssueId)</b>
-        </h3>
-        <div class="content" style="left: 50%">
-            <div class="box" style="width: 100%">
-                <form method="post" id="login_form" action="/api/issues/edit">
+    <div class="flex">
+        <div class="center">
+            <h3 class="center-text">
+                @Localizer["issue_edit_header"] <b>@(ProjectCode)-@(IssueId)</b>
+            </h3>
+            <div class="content" style="left: 50%">
+                <div class="box" style="width: 100%">
+                    <form method="post" id="login_form" action="/api/issues/edit">
 
-                    <input type="hidden" name="issueGuid" value="@(issue.Uuid)">
-                    @foreach (var f in files)
-                    {
-                            <input type="hidden" name="keepfile-@(f.Guid)" value="True">
-                    }
-
-                    <label for="title">Заголовок</label>
-                    <input type="text" id="title" name="title" value="@title">
-
-                    <label for="issueStatus">Состояние задачи</label>
-                    <select name="issueStatus" id="issueStatus">
-                        @foreach (var p in Enum.GetValues<IssueStatus>())
+                        <input type="hidden" name="issueGuid" value="@(issue.Uuid)">
+                        @foreach (var f in files)
                         {
+                            <input type="hidden" name="keepfile-@(f.Guid)" value="True">
+                        }
+
+                        <label for="title">@Localizer["edit_title"]</label>
+                        <input type="text" id="title" name="title" value="@title">
+
+                        <label for="issueStatus">@Localizer["edit_status"]</label>
+                        <select name="issueStatus" id="issueStatus">
+                            @foreach (var p in Enum.GetValues<IssueStatus>())
+                            {
                                 @if (p == issue.Status)
                                 {
-                                        <option selected value="@p">@p.GetIssueStatusName()</option>
+                                    <option selected value="@p">@Localizer[p.GetIssueStatusName()]</option>
                                 }
                                 else
                                 {
-                                        <option value="@p">@p.GetIssueStatusName()</option>
+                                    <option value="@p">@Localizer[p.GetIssueStatusName()]</option>
                                 }
-                        }
-                    </select>
+                            }
+                        </select>
 
-                    <label for="issueType">Тип задачи</label>
-                    <select name="issueType" id="issueType">
-                        @foreach (var p in Enum.GetValues<IssueType>().Except([IssueType.None]))
-                        {
+                        <label for="issueType">@Localizer["edit_type"]</label>
+                        <select name="issueType" id="issueType">
+                            @foreach (var p in Enum.GetValues<IssueType>().Except([IssueType.None]))
+                            {
                                 @if (p == type)
                                 {
-                                        <option selected value="@p">@p.GetIssueTypeName()</option>
+                                    <option selected value="@p">@Localizer[p.GetIssueTypeName()]</option>
                                 }
                                 else
                                 {
-                                        <option value="@p">@p.GetIssueTypeName()</option>
+                                    <option value="@p">@Localizer[p.GetIssueTypeName()]</option>
                                 }
-                        }
-                    </select>
+                            }
+                        </select>
 
-                    <label for="targetversions">Затронутые версии</label>
-                    <DropdownCheckbox Title="@selectedVersionsTitle" Items='items' />
+                        <label for="targetversions">@Localizer["edit_affected"]</label>
+                        <DropdownCheckbox Title="@selectedVersionsTitle" Items='items' />
 
-                    <label for="fixedIn">Исправлено в версии</label>
-                    <select name="fixedIn" id="fixedIn">
-                        <option value="">Не выбрано</option>
-                        @foreach (var v in versions)
-                        {
+                        <label for="fixedIn">@Localizer["edit_fixed_in"]</label>
+                        <select name="fixedIn" id="fixedIn">
+                            <option value="">@Localizer["edit_not_selected"]</option>
+                            @foreach (var v in versions)
+                            {
                                 @if (v == issue.FixedInVersion)
                                 {
-                                        <option selected value="@(v.Name)">@(v.Name)</option>
+                                    <option selected value="@(v.Name)">@(v.Name)</option>
                                 }
                                 else
                                 {
-                                        <option value="@(v.Name)">@(v.Name)</option>
+                                    <option value="@(v.Name)">@(v.Name)</option>
                                 }
-                        }
-                    </select>
+                            }
+                        </select>
 
 
-                    <label for="issueConfirmation">Статус подтверждения</label>
-                    <select name="issueConfirmation" id="issueConfirmation">
-                        @foreach (var p in Enum.GetValues<ConfirmationStatus>().Except([ConfirmationStatus.None]))
-                        {
+                        <label for="issueConfirmation">@Localizer["edit_confirmation"]</label>
+                        <select name="issueConfirmation" id="issueConfirmation">
+                            @foreach (var p in Enum.GetValues<ConfirmationStatus>().Except([ConfirmationStatus.None]))
+                            {
                                 @if (p == conf)
                                 {
-                                        <option selected value="@p">@p.GetIssueConfirmation()</option>
+                                    <option selected value="@p">@Localizer[p.GetIssueConfirmation()]</option>
                                 }
                                 else
                                 {
-                                        <option value="@p">@p.GetIssueConfirmation()</option>
+                                    <option value="@p">@Localizer[p.GetIssueConfirmation()]</option>
                                 }
-                        }
-                    </select>
+                            }
+                        </select>
 
-                    <label for="issueSolution">Решение задачи</label>
-                    <select name="issueSolution" id="issueSolution">
-                        @foreach (var p in Enum.GetValues<IssueSolution>())
-                        {
+                        <label for="issueSolution">@Localizer["edit_solution"]</label>
+                        <select name="issueSolution" id="issueSolution">
+                            @foreach (var p in Enum.GetValues<IssueSolution>())
+                            {
                                 @if (p == issue.Solution)
                                 {
-                                        <option selected value="@p">@p.GetIssueSolutionName()</option>
+                                    <option selected value="@p">@Localizer[p.GetIssueSolutionName()]</option>
                                 }
                                 else
                                 {
-                                        <option value="@p">@p.GetIssueSolutionName()</option>
+                                    <option value="@p">@Localizer[p.GetIssueSolutionName()]</option>
                                 }
-                        }
-                    </select>
+                            }
+                        </select>
 
-                    <label for="description">Описание задачи (<span class="clickme" @onclick="() => previewDescription = !previewDescription">@(previewDescription ? "Редактирование" : "Превью")</span>)</label>
-                    @if (previewDescription)
-                    {
+                        <label for="description">@Localizer["edit_description"] (<span class="clickme" @onclick="() => previewDescription = !previewDescription">@(previewDescription? @Localizer["edit_description_edit"] : @Localizer["edit_description_preview"])</span>)</label>
+                        @if (previewDescription)
+                        {
                             <div class="preview">
                                 <Markdown MarkdownString="@description" />
                             </div>
 
-                    }
-                    else
-                    {
-                            <textarea placeholder="Здесь поддерживается Markdown" id="description" name="description" @bind="description"></textarea>
-                    }
+                        }
+                        else
+                        {
+                            <textarea placeholder=@Localizer["edit_description_markdown"] id="description" name="description" @bind="description"></textarea>
+                        }
 
-                    @if (issue.UserAssigned != null && !_assigneeRemoved)
-                    {
+                        @if (issue.UserAssigned != null && !_assigneeRemoved)
+                        {
                             <input type="hidden" name="keep-assignee" value="True" />
-                            <label>Исполнитель (<span class="clickme" @onclick="() => _assigneeRemoved = true">Открепить от задачи</span>)</label>
+                            <label>@Localizer["edit_assigned"] (<span class="clickme" @onclick="() => _assigneeRemoved = true">@Localizer["edit_detach"]</span>)</label>
                             <AccountBadge User="issue.UserAssigned" />
                             <br />
-                    }
-
-                    <label for="files">Прикрепить файлы</label>
-                    <div class="attached-files">
-                        @foreach (var file in files)
-                        {
-                                <FileBadgeRemoveable EventHandler="FileRemove" FileModel="file" />
                         }
-                    </div>
-                    <br />
-                    <input type="file" multiple="" id="files" name="files">
 
-                    <div class="actions">
-                        <button type="button" style="left: 0" @onclick='() => { Navigation.NavigateTo($"/issue/{ProjectCode}-{IssueId}"); }'>Отменить</button>
-                        <button type="submit">Сохранить</button>
-                    </div>
-                    <p id="login_error" style="color: red; text-align: center"></p>
-                </form>
+                        <label for="files">@Localizer["edit_attach"]</label>
+                        <div class="attached-files">
+                            @foreach (var file in files)
+                            {
+                                <FileBadgeRemoveable EventHandler="FileRemove" FileModel="file" />
+                            }
+                        </div>
+                        <br />
+                        <input type="file" multiple="" id="files" name="files">
+
+                        <div class="actions">
+                            <button type="button" style="left: 0" @onclick='() => { Navigation.NavigateTo($"/issue/{ProjectCode}-{IssueId}"); }'>@Localizer["edit_cancel"]</button>
+                            <button type="submit">@Localizer["edit_save"]</button>
+                        </div>
+                        <p id="login_error" style="color: red; text-align: center"></p>
+                    </form>
+                </div>
+                <script>post_login_form();</script>
             </div>
-            <script>post_login_form();</script>
         </div>
     </div>
-</div>
 </div>
 @code {
     [Inject] DatabaseContext Database { get; set; }
@@ -199,7 +199,7 @@
         base.OnParametersSet();
     }
     private string selectedVersionsTitle = "Выбрать...";
-    
+
     protected override async Task OnInitializedAsync()
     {
         var context = HttpContextAccessor.HttpContext;

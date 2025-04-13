@@ -175,5 +175,6 @@
         _selectedIssue!.UserAssignedId = _currentUser!.Id;
         Database.SaveChanges();
         StateHasChanged();
+        Navigation.Refresh(true);
     }
 }

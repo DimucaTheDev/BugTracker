@@ -514,4 +514,72 @@
     <value>Nothing to show here</value>
     <comment>search_nothing</comment>
   </data>
+  <data name="edit_title" xml:space="preserve">
+    <value>Title</value>
+    <comment>edit_title</comment>
+  </data>
+  <data name="edit_status" xml:space="preserve">
+    <value>Status</value>
+    <comment>edit_status</comment>
+  </data>
+  <data name="edit_type" xml:space="preserve">
+    <value>Type</value>
+    <comment>edit_type</comment>
+  </data>
+  <data name="edit_affected" xml:space="preserve">
+    <value>Affected versions</value>
+    <comment>edit_affected</comment>
+  </data>
+  <data name="edit_fixed_in" xml:space="preserve">
+    <value>Fixed in</value>
+    <comment>edit_fixed_in</comment>
+  </data>
+  <data name="edit_not_selected" xml:space="preserve">
+    <value>Not selected</value>
+    <comment>edit_not_selected</comment>
+  </data>
+  <data name="edit_confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+    <comment>edit_confirmation</comment>
+  </data>
+  <data name="edit_solution" xml:space="preserve">
+    <value>Solution</value>
+    <comment>edit_solution</comment>
+  </data>
+  <data name="edit_description" xml:space="preserve">
+    <value>Description</value>
+    <comment>edit_description</comment>
+  </data>
+  <data name="edit_description_markdown" xml:space="preserve">
+    <value>Markdown is supported</value>
+    <comment>edit_description_markdown</comment>
+  </data>
+  <data name="edit_assigned" xml:space="preserve">
+    <value>Assigned</value>
+    <comment>edit_assigned</comment>
+  </data>
+  <data name="edit_attach" xml:space="preserve">
+    <value>Attach files</value>
+    <comment>edit_attach</comment>
+  </data>
+  <data name="edit_save" xml:space="preserve">
+    <value>Save</value>
+    <comment>edit_save</comment>
+  </data>
+  <data name="edit_cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>edit_cancel</comment>
+  </data>
+  <data name="edit_detach" xml:space="preserve">
+    <value>Unpin</value>
+    <comment>edit_detach</comment>
+  </data>
+  <data name="edit_description_preview" xml:space="preserve">
+    <value>Preview</value>
+    <comment>edit_description_preview</comment>
+  </data>
+  <data name="edit_description_edit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>edit_description_edit</comment>
+  </data>
 </root>

@@ -496,4 +496,72 @@
     <value>Нет задач для показа</value>
     <comment>search_nothing</comment>
   </data>
+  <data name="edit_title" xml:space="preserve">
+    <value>Заголовок</value>
+    <comment>edit_title</comment>
+  </data>
+  <data name="edit_status" xml:space="preserve">
+    <value>Статус</value>
+    <comment>edit_status</comment>
+  </data>
+  <data name="edit_type" xml:space="preserve">
+    <value>Тип</value>
+    <comment>edit_type</comment>
+  </data>
+  <data name="edit_affected" xml:space="preserve">
+    <value>Затронутые версии</value>
+    <comment>edit_affected</comment>
+  </data>
+  <data name="edit_fixed_in" xml:space="preserve">
+    <value>Исправлено в</value>
+    <comment>edit_fixed_in</comment>
+  </data>
+  <data name="edit_not_selected" xml:space="preserve">
+    <value>Не выбрано</value>
+    <comment>edit_not_selected</comment>
+  </data>
+  <data name="edit_confirmation" xml:space="preserve">
+    <value>Подтверждение</value>
+    <comment>edit_confirmation</comment>
+  </data>
+  <data name="edit_solution" xml:space="preserve">
+    <value>Решение</value>
+    <comment>edit_solution</comment>
+  </data>
+  <data name="edit_description" xml:space="preserve">
+    <value>Описание</value>
+    <comment>edit_description</comment>
+  </data>
+  <data name="edit_description_markdown" xml:space="preserve">
+    <value>Здесь поддерживается Markdown</value>
+    <comment>edit_description_markdown</comment>
+  </data>
+  <data name="edit_assigned" xml:space="preserve">
+    <value>Исполнитель</value>
+    <comment>edit_assigned</comment>
+  </data>
+  <data name="edit_attach" xml:space="preserve">
+    <value>Прикрепить файлы</value>
+    <comment>edit_attach</comment>
+  </data>
+  <data name="edit_save" xml:space="preserve">
+    <value>Сохранить</value>
+    <comment>edit_save</comment>
+  </data>
+  <data name="edit_cancel" xml:space="preserve">
+    <value>Отменить</value>
+    <comment>edit_cancel</comment>
+  </data>
+  <data name="edit_detach" xml:space="preserve">
+    <value>Открепить</value>
+    <comment>edit_detach</comment>
+  </data>
+  <data name="edit_description_preview" xml:space="preserve">
+    <value>Превью</value>
+    <comment>edit_description_preview</comment>
+  </data>
+  <data name="edit_description_edit" xml:space="preserve">
+    <value>Редактирование</value>
+    <comment>edit_description_edit</comment>
+  </data>
 </root>
