@@ -436,4 +436,64 @@
     <value>Пользователи</value>
     <comment>issue_users</comment>
   </data>
+  <data name="search_filters_selected" xml:space="preserve">
+    <value>Фильтры поиска (Выбрано: {0})</value>
+    <comment>search_filters</comment>
+  </data>
+  <data name="search_filters" xml:space="preserve">
+    <value>Фильтры поиска</value>
+    <comment>search_filters</comment>
+  </data>
+  <data name="search_title" xml:space="preserve">
+    <value>Заголовок:</value>
+    <comment>search_title</comment>
+  </data>
+  <data name="search_by_name" xml:space="preserve">
+    <value>Поиск по заголовку</value>
+    <comment>search_by_name</comment>
+  </data>
+  <data name="search_type" xml:space="preserve">
+    <value>Тип:</value>
+    <comment>search_type</comment>
+  </data>
+  <data name="search_all" xml:space="preserve">
+    <value>Все</value>
+    <comment>search_all</comment>
+  </data>
+  <data name="search_status" xml:space="preserve">
+    <value>Статус:</value>
+    <comment>search_status</comment>
+  </data>
+  <data name="search_created_after" xml:space="preserve">
+    <value>Создано после:</value>
+    <comment>search_created_after</comment>
+  </data>
+  <data name="search_created_before" xml:space="preserve">
+    <value>Создано до:</value>
+    <comment>search_created_before</comment>
+  </data>
+  <data name="search_has_assigner" xml:space="preserve">
+    <value>Наличие исполнителя:</value>
+    <comment>search_has_assigner</comment>
+  </data>
+  <data name="search_assigner_yes_no" xml:space="preserve">
+    <value>Все</value>
+    <comment>search_assigner_yes_no</comment>
+  </data>
+  <data name="search_assigner_yes" xml:space="preserve">
+    <value>Присутствует</value>
+    <comment>search_assigner_yes</comment>
+  </data>
+  <data name="search_assigner_no" xml:space="preserve">
+    <value>Отсутствует</value>
+    <comment>search_assigner_no</comment>
+  </data>
+  <data name="search_confirmation" xml:space="preserve">
+    <value>Подтверждение:</value>
+    <comment>search_confirmation</comment>
+  </data>
+  <data name="search_nothing" xml:space="preserve">
+    <value>Нет задач для показа</value>
+    <comment>search_nothing</comment>
+  </data>
 </root>

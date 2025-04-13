@@ -454,4 +454,64 @@
     <value>Users</value>
     <comment>issue_users</comment>
   </data>
+  <data name="search_filters_selected" xml:space="preserve">
+    <value>Search filters (Selected: {0})</value>
+    <comment>search_filters_selected</comment>
+  </data>
+  <data name="search_filters" xml:space="preserve">
+    <value>Search filters</value>
+    <comment>search_filters</comment>
+  </data>
+  <data name="search_title" xml:space="preserve">
+    <value>Title:</value>
+    <comment>search_title</comment>
+  </data>
+  <data name="search_by_name" xml:space="preserve">
+    <value>Search by title</value>
+    <comment>search_by_name</comment>
+  </data>
+  <data name="search_type" xml:space="preserve">
+    <value>Type:</value>
+    <comment>search_type</comment>
+  </data>
+  <data name="search_all" xml:space="preserve">
+    <value>All</value>
+    <comment>search_all</comment>
+  </data>
+  <data name="search_status" xml:space="preserve">
+    <value>Status:</value>
+    <comment>search_status</comment>
+  </data>
+  <data name="search_created_after" xml:space="preserve">
+    <value>Created after:</value>
+    <comment>search_created_after</comment>
+  </data>
+  <data name="search_created_before" xml:space="preserve">
+    <value>Created before:</value>
+    <comment>search_created_before</comment>
+  </data>
+  <data name="search_has_assigner" xml:space="preserve">
+    <value>Has assigner:</value>
+    <comment>search_has_assigner</comment>
+  </data>
+  <data name="search_assigner_yes_no" xml:space="preserve">
+    <value>All</value>
+    <comment>search_assigner_yes_no</comment>
+  </data>
+  <data name="search_assigner_yes" xml:space="preserve">
+    <value>Yes</value>
+    <comment>search_assigner_yes</comment>
+  </data>
+  <data name="search_assigner_no" xml:space="preserve">
+    <value>No</value>
+    <comment>search_assigner_no</comment>
+  </data>
+  <data name="search_confirmation" xml:space="preserve">
+    <value>Confirmation:</value>
+    <comment>search_confirmation</comment>
+  </data>
+  <data name="search_nothing" xml:space="preserve">
+    <value>Nothing to show here</value>
+    <comment>search_nothing</comment>
+  </data>
 </root>

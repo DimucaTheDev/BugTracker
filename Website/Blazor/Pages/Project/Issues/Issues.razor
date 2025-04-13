@@ -18,63 +18,63 @@
             <p class="filter-div-selector" @onclick='ToggleDropdown'>
                 @if (filters.Count > 0)
                 {
-                    <b>Фильтры поиска (Выбрано: @(filters.Count))</b>
+                    <b>@Localizer["search_filters_selected", filters.Count]</b>
                 }
                 else
                 {
-                    <b>Фильтры поиска</b>
+                    <b>@Localizer["search_filters"]</b>
                 }
             </p>
             <hr style="margin: 0" />
 
             <div class="filter-dropdown" style='display: @(dropdownVisible ? "block" : "none")'>
-                <label>Заголовок:</label>
-                <input type="text" placeholder="Поиск по названию" @oninput='e => UpdateFilter("title", e.Value?.ToString()??"")' />
+                <label>@Localizer["search_title"]</label>
+                <input type="text" placeholder="@Localizer["search_by_name"]" @oninput='e => UpdateFilter("title", e.Value?.ToString()??"")' />
                 <br />
 
-                <label>Тип задачи:</label>
+                <label>@Localizer["search_type"]</label>
                 <select @onchange='e => UpdateFilter("type", e.Value.ToString())'>
                     @if (!filters.ContainsKey("type") || string.IsNullOrEmpty(filters["type"]))
                     {
-                        <option value="" selected>Все</option>
+                        <option value="" selected>@Localizer["search_all"]</option>
                     }
                     else
                     {
-                        <option value="">Все</option>
+                        <option value="">@Localizer["search_all"]</option>
                     }
                     @foreach (var issueType in Enum.GetValues<IssueType>())
                     {
                         @if (filters.TryGetValue("type", out var type) && type == issueType.ToString())
                         {
-                            <option value='@issueType' selected>@(issueType.GetIssueTypeName())</option>
+                            <option value='@issueType' selected>@(Localizer[issueType.GetIssueTypeName()])</option>
                         }
                         else
                         {
-                            <option value='@issueType'>@(issueType.GetIssueTypeName())</option>
+                            <option value='@issueType'>@(Localizer[issueType.GetIssueTypeName()])</option>
                         }
                     }
                 </select>
                 <br />
 
-                <label>Статус:</label>
+                <label>@Localizer["search_status"]</label>
                 <select @onchange='e => UpdateFilter("status", e.Value.ToString())'>
                     @if (!filters.ContainsKey("status") || string.IsNullOrEmpty(filters["status"]))
                     {
-                        <option value="" selected>Все</option>
+                        <option value="" selected>@Localizer["search_all"]</option>
                     }
                     else
                     {
-                        <option value="">Все</option>
+                        <option value="">@Localizer["search_all"]</option>
                     }
                     @foreach (var issueStatus in Enum.GetValues<IssueStatus>())
                     {
                         @if (filters.TryGetValue("status", out var status) && status == issueStatus.ToString())
                         {
-                            <option value='@issueStatus' selected>@issueStatus.GetIssueStatusName()</option>
+                            <option value='@issueStatus' selected>@Localizer[issueStatus.GetIssueStatusName()]</option>
                         }
                         else
                         {
-                            <option value='@issueStatus'>@(issueStatus.GetIssueStatusName())</option>
+                            <option value='@issueStatus'>@(Localizer[issueStatus.GetIssueStatusName()])</option>
                         }
                     }
                 </select>
@@ -87,66 +87,66 @@
                     var toValue = filters.TryGetValue("to", out var to) ? to : "";
                 }
 
-                <label>Создано после:</label>
+                <label>@Localizer["search_created_after"]</label>
                 <input type="date"
                        value="@fromValue"
                        @onchange='e => UpdateFilter("from", e.Value.ToString())' />
                 <br />
 
-                <label>Создано до:</label>
+                <label>@Localizer["search_created_before"]</label>
                 <input type="date"
                        value="@toValue"
                        @onchange='e => UpdateFilter("to", e.Value.ToString())' />
 
                 <br />
-                <label>Наличие исполнителя:</label>
+                <label>@Localizer["search_has_assigner"]</label>
                 <select @onchange='e => UpdateFilter("has_assigner", e.Value.ToString())'>
                     @if (!filters.ContainsKey("has_assigner") || string.IsNullOrEmpty(filters["has_assigner"]))
                     {
-                        <option value="" selected>Указан или не указан</option>
+                        <option value="" selected>@Localizer["search_assigner_yes_no"]</option>
                     }
                     else
                     {
-                        <option value="">Указан или не указан</option>
+                        <option value="">@Localizer["search_assigner_yes_no"]</option>
                     }
                     @if (filters.TryGetValue("has_assigner", out var has_assigner) && has_assigner == "yes")
                     {
-                        <option value='yes' selected>Указан</option>
+                        <option value='yes' selected>@Localizer["search_assigner_yes"]</option>
                     }
                     else
                     {
-                        <option value='yes'>Указан</option>
+                        <option value='yes'>@Localizer["search_assigner_yes"]</option>
                     }
                     @if (filters.TryGetValue("has_assigner", out _) && has_assigner == "no")
                     {
-                        <option value='no' selected>Не указан</option>
+                        <option value='no' selected>@Localizer["search_assigner_no"]</option>
                     }
                     else
                     {
-                        <option value='no'>Не указан</option>
+                        <option value='no'>@Localizer["search_assigner_no"]</option>
                     }
                 </select>
 
 
-                <label>Подтверждение:</label>
+                <label>@Localizer["search_confirmation"]</label>
                 <select @onchange='e => UpdateFilter("confirmation", e.Value.ToString())'>
                     @if (!filters.ContainsKey("confirmation") || string.IsNullOrEmpty(filters["confirmation"]))
                     {
-                        <option value="" selected>Все</option>
+                        <option value="" selected>@Localizer["search_all"]</option>
                     }
                     else
                     {
-                        <option value="">Все</option>
+                        <option value="">@Localizer["search_all"]</option>
                     }
                     @foreach (var issueType in Enum.GetValues<ConfirmationStatus>())
                     {
                         @if (filters.TryGetValue("confirmation", out var confirmation) && confirmation == issueType.ToString())
                         {
-                            <option value='@issueType' selected>@(issueType.GetIssueConfirmation())</option>
+                            <option value='@issueType' selected>@(Localizer[issueType.GetIssueConfirmation()])</option>
                         }
                         else
                         {
-                            <option value='@issueType'>@(issueType.GetIssueConfirmation())</option>
+                            <option value='@issueType'>@(Localizer[issueType.GetIssueConfirmation()])</option>
                         }
                     }
                 </select>
@@ -174,7 +174,7 @@
             }
             else
             {
-                <p class="no-issues">Нет задач для показа</p>
+                <p class="no-issues">@Localizer["search_nothing"]</p>
             }
         </div>
 
