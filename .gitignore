@@ -308,3 +308,4 @@ __pycache__/
 /Website/private.key
 /Website/config.json
 /Website/logs
+*.docx
