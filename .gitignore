@@ -295,9 +295,6 @@ __pycache__/
 /Website/salt.txt
 /Website/todo.txt
 /Website/attached-files
-/Балаболка.docx
-/Проектная работа.pptx
-/Проектная работа.docx
 /Website/debug_database.db
 /Website/static
 /Website/static/projects/*
@@ -309,3 +306,4 @@ __pycache__/
 /Website/config.json
 /Website/logs
 *.docx
+*.pptx
