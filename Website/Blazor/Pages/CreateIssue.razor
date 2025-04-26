@@ -21,7 +21,7 @@
                     <select name="issueType" id="issueType">
                         @foreach (var p in Enum.GetValues<IssueType>().Except([IssueType.None]))
                         {
-                            <option value="@p">@p.GetIssueTypeName()</option>
+                            <option value="@p">@Localizer[p.GetIssueTypeName()]</option>
                         }
                     </select>
 

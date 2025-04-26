@@ -1,8 +1,9 @@
 ﻿@page "/admin/EditProject/{ProjectCode}"
+@using Serilog
 @attribute [Auth]
 @if (!Database.Issues
-  .Include(s => s.Project)
-  .Any(s => s.Project!.ProjectCode == ProjectCode))
+.Include(s => s.Project)
+.Any(s => s.Project!.ProjectCode == ProjectCode))
 {
     <NotFoundPage />
     return;
@@ -60,15 +61,73 @@
 
 @code {
     [Parameter] public required string ProjectCode { get; set; }
-    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; } 
-    [Inject] public required DatabaseContext Database { get; set; } 
+    [Inject] public required IHttpContextAccessor HttpContextAccessor { get; set; }
+    [Inject] public required DatabaseContext Database { get; set; }
     private ProjectModel _project = null!;
 
-    string title, code, description, smallicon, wideicon;
-
-    void ApplySettings()
+    public string code
     {
-        
+        get;
+        set
+        {
+            field = value.ToUpper();
+            codeUpd = _project.ProjectCode != value;
+        }
+    }
+
+    string title, description, smallicon, wideicon;
+    bool codeUpd, sIconUpd, wIconUpd;
+
+    async Task ApplySettings()
+    {
+        var smallPath = GetFilePath("projects", code);
+        var widePath = GetFilePath("wideprojects", code);
+
+        var oldSmallPath = GetFilePath("projects", _project.ProjectCode);
+        var oldWidePath = GetFilePath("wideprojects", _project.ProjectCode);
+
+        _project.ProjectName = title;
+
+        if (codeUpd)
+        {
+            _project.ProjectCode = code;
+            await MoveFileIfNeeded(oldSmallPath, smallPath);
+            await MoveFileIfNeeded(oldWidePath, widePath);
+        }
+
+        _project.Description = description;
+
+        if (sIconUpd)
+        {
+            var small = Convert.FromBase64String(smallicon.Split("base64,").Last());
+            await File.WriteAllBytesAsync(smallPath, small);
+        }
+
+        if (wIconUpd)
+        {
+            var wide = Convert.FromBase64String(wideicon.Split("base64,").Last());
+            await File.WriteAllBytesAsync(widePath, wide);
+        }
+
+        await Database.SaveChangesAsync();
+        Navigation.NavigateTo($"/project/{code}");
+    }
+
+    string GetFilePath(string folder, string projectCode) => Path.Combine("static", folder, $"{projectCode}.png");
+
+    async Task MoveFileIfNeeded(string oldPath, string newPath)
+    {
+        if (File.Exists(oldPath) && !File.Exists(newPath))
+        {
+            try
+            {
+                File.Move(oldPath, newPath);
+            }
+            catch (IOException ex)
+            {
+                Log.Error(ex, $"Ошибка перемещения файла");
+            }
+        }
     }
 
     void Preview()
@@ -78,6 +137,7 @@
     }
     private async Task SetSmallIcon(InputFileChangeEventArgs obj)
     {
+        sIconUpd = true;
         var file = obj.File;
         using var ms = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(ms);
@@ -85,6 +145,7 @@
     }
     private async Task SetWideIcon(InputFileChangeEventArgs obj)
     {
+        wIconUpd = true;
         var file = obj.File;
         using var ms = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(ms);

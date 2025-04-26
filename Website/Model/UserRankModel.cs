@@ -10,8 +10,8 @@ namespace Website.Model
         public string Name { get; set; }
         public UserRights Rights { get; set; }
         //[NotMapped] public Config.RankConfig? RankConfig { get => Config.Instance.RankConfigs[(int)Id]; set => Config.Instance.RankConfigs[(int)Id] = value!; }
-        public string ForegroundColor { get; set; }
-        public string BackgroundColor { get; set; }
+        public string? ForegroundColor { get; set; } = "fff";
+        public string? BackgroundColor { get; set; } = "c0c0c0";
         [Column("ShowRankNameByDefault")]
         public bool ShowRankName { get; set; } = true;
     }

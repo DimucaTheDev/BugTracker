@@ -564,4 +564,10 @@
     <value>Редактирование</value>
     <comment>edit_description_edit</comment>
   </data>
+  <data name="main_starting" xml:space="preserve">
+    <value>Запуск Веб-сервера...</value>
+  </data>
+  <data name="main_key" xml:space="preserve">
+    <value>Создан новый приватный ключ. Храните его в безопасном месте и никому не передавайте.</value>
+  </data>
 </root>

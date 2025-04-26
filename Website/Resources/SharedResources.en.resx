@@ -173,7 +173,7 @@
     <value>Nothing to show here.</value>
   </data>
   <data name="projects_nothing_create_new" xml:space="preserve">
-    <value>Create new project on admin page.</value>
+    <value>Create a new project on admin page.</value>
   </data>
   <data name="projects_title" xml:space="preserve">
     <value>Project List</value>
@@ -581,5 +581,11 @@
   <data name="edit_description_edit" xml:space="preserve">
     <value>Edit</value>
     <comment>edit_description_edit</comment>
+  </data>
+  <data name="main_starting" xml:space="preserve">
+    <value>Starting Web-server...</value>
+  </data>
+  <data name="main_key" xml:space="preserve">
+    <value>Private key generated. Please keep it safe and do not share it with anyone.</value>
   </data>
 </root>

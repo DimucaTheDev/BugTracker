@@ -8,6 +8,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
+using System.Reflection;
+using System.Resources;
 using Website.Data;
 using Website.Util;
 
@@ -20,6 +23,10 @@ namespace Website
         public static SymmetricSecurityKey Key = new(File.ReadAllBytes("private.key"));
         public static WebApplication Application;
         public static bool IsDev;
+
+        private static readonly string ResourceName = "Website.Resources.SharedResources";
+        private static ResourceManager Localizer = new(ResourceName, Assembly.GetExecutingAssembly());
+        private static Logger<Program> Logger => new(new SerilogLoggerFactory(Log.Logger));
 
         public static async Task Main(string[] args)
         {
@@ -34,7 +41,7 @@ namespace Website
                 .Select(_ => (char)Random.Shared.Next(0x21, 0x7E)) // random characters
                 .ToArray());
             File.WriteAllText("private.key", keyContent);
-            Log.Information("Private key generated. Please keep it safe and do not share it with anyone.");
+            Log.Information(Localizer.GetString("main_key"));
         }
 
         public static void CheckAttachments()
@@ -46,14 +53,17 @@ namespace Website
             {
                 if (!File.Exists(Path.Combine("attached-files", file.Guid)))
                 {
-                    Log.Warning($"File({file.Id}) {file.Guid} ({file.FileName}) is in database but does not exist on server!");
+                    Logger.LogWarning($"File({file.Id}) {file.Guid} ({file.FileName}) is in database but does not exist on server!");
                 }
             }
         }
 
         public static async Task SetupServer(string[] args)
         {
-            Console.WriteLine("Starting Web-server...");
+            Console.WriteLine("==========\nBugTracker\n==========");
+
+            Console.WriteLine(Localizer.GetString("main_starting"));
+
             CreateDirectories();
             GenerateKeyIfNeeded();
             var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +76,7 @@ namespace Website
 
         private static void CreateDirectories()
         {
+
             foreach (var dir in new[] { "logs", "static/projects", "static/useravatars", "static/wideprojects", "static/template", "attached-files" })
             {
                 Directory.CreateDirectory(dir);
@@ -89,7 +100,7 @@ namespace Website
                 outputTemplate: format) // Логи в файл
             .Enrich.FromLogContext()
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Error)
             .MinimumLevel.Information()
             .CreateLogger();
 

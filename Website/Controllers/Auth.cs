@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,15 +14,26 @@ namespace Website.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthController(DatabaseContext dbContext) : ControllerBase
+    public class AuthController(DatabaseContext dbContext, IStringLocalizer<SharedResources> localizer) : ControllerBase
     {
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm] string username, [FromForm] string password, [FromForm(Name = "remember")] string? rememberFlag)
+        public class LoginDto
         {
+            public string Username { get; set; }
+            public string Password { get; set; }
+            [FromForm(Name = "remember")]
+            public string? RememberFlag { get; set; }
+        }
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromForm] LoginDto dto)
+        {
+            var username = dto.Username;
+            var password = dto.Password;
+            var rememberFlag = dto.RememberFlag;
+
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
             if (user == null || !PasswordHelper.AreEqual(password, user.PasswordHash))
             {
-                //TODO: cooldown/too much attempts
+                //TODO: cooldown/too much attempts 
                 return BadRequest(new { error = true, code = 400, description = "Некорректные данные для входа!" });
             }
 
