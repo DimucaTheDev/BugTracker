@@ -588,4 +588,7 @@
   <data name="main_key" xml:space="preserve">
     <value>Private key generated. Please keep it safe and do not share it with anyone.</value>
   </data>
+  <data name="main_not_exist" xml:space="preserve">
+    <value>These files are in database, but do not exist on server: {0}</value>
+  </data>
 </root>

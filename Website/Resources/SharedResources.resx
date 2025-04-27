@@ -570,4 +570,7 @@
   <data name="main_key" xml:space="preserve">
     <value>Создан новый приватный ключ. Храните его в безопасном месте и никому не передавайте.</value>
   </data>
+  <data name="main_not_exist" xml:space="preserve">
+    <value>Эти файлы есть в датабазе, но отсутствуют на сервере: {0}</value>
+  </data>
 </root>

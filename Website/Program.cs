@@ -12,6 +12,7 @@ using Serilog.Extensions.Logging;
 using System.Reflection;
 using System.Resources;
 using Website.Data;
+using Website.Model;
 using Website.Util;
 
 namespace Website
@@ -41,33 +42,28 @@ namespace Website
                 .Select(_ => (char)Random.Shared.Next(0x21, 0x7E)) // random characters
                 .ToArray());
             File.WriteAllText("private.key", keyContent);
-            Log.Information(Localizer.GetString("main_key"));
+            Log.Information(Localizer.GetString("main_key")!);
         }
-
         public static void CheckAttachments()
         {
             using var scope = Application.Services.CreateScope();
             var databaseContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
 
-            foreach (var file in databaseContext.AttachedFiles)
-            {
-                if (!File.Exists(Path.Combine("attached-files", file.Guid)))
-                {
-                    Logger.LogWarning($"File({file.Id}) {file.Guid} ({file.FileName}) is in database but does not exist on server!");
-                }
-            }
+            List<AttachedFileModel> notExist = databaseContext.AttachedFiles.
+                ToList()
+                .Where(file => !File.Exists(Path.Combine("attached-files", file.Guid)))
+                .ToList();
+            var ids = string.Join(" ", notExist.Select(s => $"{s.Id}"));
+            Logger.LogError(Localizer.GetString("main_not_exist"), ids);
         }
 
         public static async Task SetupServer(string[] args)
         {
-            Console.WriteLine("==========\nBugTracker\n==========");
-
-            Console.WriteLine(Localizer.GetString("main_starting"));
-
             CreateDirectories();
+            SetupLogger();
+            Logger.LogInformation(Localizer.GetString("main_starting"));
             GenerateKeyIfNeeded();
             var builder = WebApplication.CreateBuilder(args);
-            SetupLogger(builder);
             ConfigureServices(builder);
             Application = builder.Build();
             ConfigureMiddleware(Application, builder);
@@ -76,7 +72,6 @@ namespace Website
 
         private static void CreateDirectories()
         {
-
             foreach (var dir in new[] { "logs", "static/projects", "static/useravatars", "static/wideprojects", "static/template", "attached-files" })
             {
                 Directory.CreateDirectory(dir);
@@ -88,11 +83,8 @@ namespace Website
             if (!File.Exists("private.key")) GeneratePrivateKey();
         }
 
-        private static void SetupLogger(WebApplicationBuilder builder)
+        private static void SetupLogger()
         {
-
-            builder.Logging.ClearProviders();
-
             var format = "[ {Level:u3} {Timestamp:yyyy-MM-dd HH:mm:ss} [{SourceContext}]] {Message:lj}{NewLine}{Exception}";
             Log.Logger = new LoggerConfiguration()
             .WriteTo.Console(outputTemplate: format)
@@ -103,12 +95,12 @@ namespace Website
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Error)
             .MinimumLevel.Information()
             .CreateLogger();
-
-            builder.Host.UseSerilog();
         }
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Logging.ClearProviders();
+            builder.Host.UseSerilog();
             builder.Services.AddLocalization((s) => s.ResourcesPath = "Resources");
             builder.Services.AddScoped<ILanguageService, LanguageService>();
             builder.Services.AddDbContext<DatabaseContext>(options =>
