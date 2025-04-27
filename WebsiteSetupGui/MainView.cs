@@ -10,6 +10,9 @@ public partial class MainView
         {
             Application.RequestStop();
         };
+        edit.Enabled = IsInstalled();
+        reset.Enabled = IsInstalled();
     }
+    bool IsInstalled() => (File.Exists("database.db") || File.Exists("debug_database.db")) && File.Exists("Website.dll");
 }
 
