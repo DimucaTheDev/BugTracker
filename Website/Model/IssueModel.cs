@@ -19,6 +19,7 @@ namespace Website.Model
         public Guid Uuid { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateTime? ResolvedAt { get; set; }
         public IssueStatus Status { get; set; }
         public IssuePriority Priority { get; set; }
         public IssueType IssueType { get; set; }

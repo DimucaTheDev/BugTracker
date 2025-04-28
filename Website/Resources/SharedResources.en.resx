@@ -591,4 +591,40 @@
   <data name="main_not_exist" xml:space="preserve">
     <value>These files are in database, but do not exist on server: {0}</value>
   </data>
+  <data name="stats_all_proj" xml:space="preserve">
+    <value>Statistics of all projects</value>
+  </data>
+  <data name="stats_proj" xml:space="preserve">
+    <value>Statistics of project</value>
+  </data>
+  <data name="stats_all" xml:space="preserve">
+    <value>All projects</value>
+  </data>
+  <data name="stats_type" xml:space="preserve">
+    <value>Distribution by solution</value>
+  </data>
+  <data name="stats_status" xml:space="preserve">
+    <value>Distribution by status</value>
+  </data>
+  <data name="stats_activity" xml:space="preserve">
+    <value>Report creation activity</value>
+  </data>
+  <data name="stats_created" xml:space="preserve">
+    <value>Reports created</value>
+  </data>
+  <data name="issue_resolved" xml:space="preserve">
+    <value>Resolved: {0}</value>
+  </data>
+  <data name="stats_avg" xml:space="preserve">
+    <value>Average issue solving time</value>
+  </data>
+  <data name="stats_days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="stats_count" xml:space="preserve">
+    <value>Report count</value>
+  </data>
+  <data name="stats_dev" xml:space="preserve">
+    <value>Developer workload</value>
+  </data>
 </root>

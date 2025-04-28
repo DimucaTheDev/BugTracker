@@ -142,10 +142,19 @@ namespace Website.Controllers
                     UserUploadedId = user.Id,
                 });
             }
-
-            issue.Status = Enum.Parse<IssueStatus>(issueStatus);
+            var s = Enum.Parse<IssueStatus>(issueStatus);
+            var s2 = Enum.Parse<IssueSolution>(issueSolution);
+            if (s is IssueStatus.Closed or IssueStatus.Resolved || s2 is IssueSolution.Fixed)
+            {
+                issue.ResolvedAt ??= DateTime.Now;
+            }
+            else
+            {
+                issue.ResolvedAt = null;
+            }
+            issue.Status = s;
             issue.ConfirmationStatus = Enum.Parse<ConfirmationStatus>(issueConfirmation);
-            issue.Solution = Enum.Parse<IssueSolution>(issueSolution);
+            issue.Solution = s2;
             issue.IssueType = issueType;
             issue.Title = title;
             issue.Description = description;

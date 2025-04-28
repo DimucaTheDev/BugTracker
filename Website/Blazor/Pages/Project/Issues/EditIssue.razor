@@ -81,7 +81,7 @@
 
                         <label for="issueConfirmation">@Localizer["edit_confirmation"]</label>
                         <select name="issueConfirmation" id="issueConfirmation">
-                            @foreach (var p in Enum.GetValues<ConfirmationStatus>().Except([ConfirmationStatus.None]))
+                            @foreach (var p in Enum.GetValues<ConfirmationStatus>()/*.Except([ConfirmationStatus.None])*/)
                             {
                                 @if (p == conf)
                                 {

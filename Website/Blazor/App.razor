@@ -13,18 +13,20 @@
     <script src="/js/index.js"></script>
     <script src="/js/post.js"></script>
     <script src="/js/highlight/highlight.js" async></script>
-    <script src="/js/dropdown.js"></script> 
+    <script src="/js/dropdown.js"></script>
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
-<Routes @rendermode="InteractiveServer"/>
+    <Routes @rendermode="InteractiveServer" />
 
-@*<Router @rendermode="InteractiveServer" AppAssembly="typeof(Program).Assembly">
+    @*<Router @rendermode="InteractiveServer" AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)"/>
     </Found>
-</Router>*@
-<script src="_framework/blazor.web.js"></script>
+    </Router>*@
+    <script src="_framework/blazor.web.js"></script>
+    <script src="_content/PSC.Blazor.Components.Chartjs/lib/Chart.js/chart.js"></script>
+    <script src="_content/PSC.Blazor.Components.Chartjs/Chart.js" type="module"></script>
 </body>
 </html>

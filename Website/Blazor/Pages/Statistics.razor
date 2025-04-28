@@ -1,2 +1,277 @@
-﻿@page "/statistics"
-<h3>Statistics</h3> 
+﻿@page "/statistics/{ProjectCode?}"
+
+@if (project is null && !string.IsNullOrEmpty(ProjectCode))
+{
+    <NotFoundPage Route="@($"statistics/{ProjectCode}")" />
+    return;
+}
+
+@if (string.IsNullOrEmpty(ProjectCode))
+{
+    <h1 class="text-center mb-4">@Localizer["stats_all_proj"]</h1>
+}
+else
+{
+    <h1 class="text-center mb-4">@Localizer["stats_proj"] <b>@project!.ProjectName</b></h1>
+}
+<select @onchange="OnProjectSelected" class="form-select" style="max-width: 300px;margin-left: 2rem">
+    <option value="">@Localizer["stats_all"]</option>
+    @foreach (var p in DbContext.Projects)
+    {
+        if (SelectedProjectCode == p.ProjectCode)
+        {
+            <option value="@p.ProjectCode" selected>[@p.ProjectCode] @p.ProjectName</option>
+        }
+        else
+        {
+            <option value="@p.ProjectCode">[@p.ProjectCode] @p.ProjectName</option>
+        }
+    }
+</select>
+
+
+
+<div class="statistics-container">
+    <div class="chart-card">
+        <h3 class="chart-title">@Localizer["stats_type"]</h3>
+        <Chart Width="100%" Config="@solutionPieData" />
+    </div>
+
+    <div class="chart-card">
+        <h3 class="chart-title">@Localizer["stats_status"]</h3>
+        <Chart Width="100%" Config="@statusBarData" />
+    </div>
+
+    <div class="chart-card">
+        <h3 class="chart-title">@Localizer["stats_activity"]</h3>
+        <Chart Width="100%" Config="@activityLineData" />
+    </div>
+    <div class="chart-card">
+        <h3 class="chart-title">@Localizer["stats_avg"]</h3>
+        <Chart Width="100%" Config="@activityAvg" />
+    </div>
+
+    <div class="chart-card">
+        <h3 class="chart-title">@Localizer["stats_dev"]</h3>
+        <Chart Width="100%" Config="@devStats" />
+    </div>
+</div>
+
+
+@code {
+    private DoughnutChartConfig solutionPieData;
+    private DoughnutChartConfig statusBarData;
+    private LineChartConfig activityLineData;
+    private BarChartConfig activityAvg;
+    private DoughnutChartConfig devStats;
+
+    private ProjectModel? project;
+    [Parameter]
+    public string? ProjectCode { get; set => field = value?.ToUpper(); }
+    [Inject]
+    private DatabaseContext DbContext { get; set; } = default!;
+    [CascadingParameter]
+    public required ProjectLayout Layout { get; set; }
+    private string? SelectedProjectCode { get; set; }
+
+
+    private void OnProjectSelected(ChangeEventArgs e)
+    {
+        var selectedCode = e.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(selectedCode))
+        {
+            Navigation.NavigateTo("/statistics", !true);
+        }
+        else
+        {
+            Navigation.NavigateTo($"/statistics/{selectedCode}", !true);
+        }
+        StateHasChanged();
+    }
+
+    protected override void OnParametersSet()
+    {
+        SelectedProjectCode = ProjectCode;
+        var issues = DbContext.Issues
+            .Include(s => s.Project)
+            .Where(s => s.Project!.ProjectCode == ProjectCode || string.IsNullOrEmpty(ProjectCode));
+
+        if (!string.IsNullOrEmpty(ProjectCode))
+        {
+            project = DbContext.Projects.FirstOrDefault(s => s.ProjectCode == ProjectCode)!;
+            if (project == null) return;
+            // Layout.ProjectCode = ProjectCode;
+            // Layout.ProjectName = project?.ProjectName;
+        }
+
+        var solutionGroups = issues.GroupBy(i => i.Solution)
+            .Select(g => new { Solution = Localizer[g.Key.GetIssueSolutionName()].ToString(), Count = g.Count() })
+            .ToList();
+
+        solutionPieData = new()
+        {
+            Data = new()
+            {
+                Labels = solutionGroups.Select(g => g.Solution).ToList(),
+                Datasets = new List<DoughnutDataset>
+                {
+                    new ()
+                    {
+                        BackgroundColor = GenerateRandomColors(solutionGroups.Count),
+                        Data = solutionGroups.Select(g => (decimal?)g.Count).ToList()
+                    }
+                }
+            }
+        };
+
+        var statusGroups = issues.GroupBy(i => i.Status)
+            .Select(g => new { Status = Localizer[g.Key.GetIssueStatusName()].ToString(), Count = g.Count() })
+            .ToList();
+
+        statusBarData = new()
+        {
+            Data = new()
+            {
+                Labels = statusGroups.Select(g => g.Status).ToList(),
+                Datasets = new List<DoughnutDataset>
+                {
+                    new DoughnutDataset
+                    {
+                        Label = Localizer["stats_count"],
+                        BackgroundColor = GenerateRandomColors(statusGroups.Count),
+                        Data = statusGroups.Select(g => (decimal?)g.Count).ToList()
+                    }
+                }
+            }
+        };
+
+        var dailyGroups = issues.GroupBy(i => i.CreatedAt.Date)
+            .OrderBy(g => g.Key)
+            .Select(g => new { Date = g.Key.ToString("d"), Count = g.Count() })
+            .ToList();
+
+        activityLineData = new()
+        {
+            Data = new()
+            {
+                Labels = dailyGroups.Select(g => g.Date).ToList(),
+                Datasets = new List<LineDataset>
+                {
+                    new LineDataset
+                    {
+                        Label = Localizer["stats_created"],
+                        BorderColor = "rgba(75, 192, 192, 1)",
+                        BackgroundColor = "rgba(75, 192, 192, 0.2)",
+                        Data = dailyGroups.Select(g => (decimal?)g.Count).ToList(),
+                        Fill = true
+                    }
+                }
+            }
+        };
+
+
+        var statusGroup =
+            issues.Where(i => i.ResolvedAt != null)
+            .Include(s => s.Project)
+            .GroupBy(i => i.Project!.ProjectCode)
+            .ToList()
+            .Select(g => new
+            {
+                Status = g.Key,
+                AverageResolutionTime = g.Average(i => (i.ResolvedAt!.Value - i.CreatedAt).TotalDays) // Среднее время решения
+            })
+            .ToList();
+
+        activityAvg = new BarChartConfig
+        {
+            Data = new BarData()
+            {
+                Labels = statusGroup.Select(g => g.Status).ToList(),
+                Datasets = new List<BarDataset>
+                {
+                    new BarDataset
+                    {
+                        Label = Localizer["stats_days"],
+                        BackgroundColor = GenerateRandomColors(statusGroup.Count),
+                        Data = statusGroup.Select(g => (decimal?)g.AverageResolutionTime).ToList()
+                    }
+                }
+            }
+        };
+
+        var developerStats =
+            issues
+            .Include(s => s.UserAssigned)
+            .Where(s => s.UserAssigned != null)
+            .GroupBy(i => i.UserAssigned)
+            .Select(g => new { Developer = g.Key, Count = g.Count() })
+            .ToList();
+
+        devStats = new()
+        {
+            Data = new()
+            {
+                Labels = developerStats.Select(g => g.Developer!.ShownName).ToList(),
+                Datasets = new List<DoughnutDataset>
+                {
+                    new ()
+                    {
+                        BackgroundColor = GenerateRandomColors(developerStats.Count),
+                        Data = developerStats.Select(g => (decimal?)g.Count).ToList()
+                    }
+                }
+            }
+        };
+    }
+
+    private List<IssueModel> GenerateFakeIssues()
+    {
+        var rand = new Random();
+        var issues = new List<IssueModel>();
+
+        for (int i = 0; i < 100; i++)
+        {
+            issues.Add(new IssueModel
+            {
+                CreatedAt = DateTime.Now.AddDays(-rand.Next(0, 30)),
+                Status = (IssueStatus)rand.Next(0, Enum.GetValues<IssueStatus>().Length),
+                Solution = (IssueSolution)rand.Next(0, Enum.GetValues<IssueSolution>().Length),
+                IssueType = (IssueType)rand.Next(0, Enum.GetValues<IssueType>().Length)
+            });
+        }
+
+        return issues;
+    }
+
+    private List<string> GenerateRandomColors(int count)
+    {
+        var palette = new List<string>
+        {
+            "rgba(255, 99, 132, 0.7)",   // Красный
+            "rgba(54, 162, 235, 0.7)",   // Синий
+            "rgba(255, 206, 86, 0.7)",   // Желтый
+            "rgba(75, 192, 192, 0.7)",   // Бирюзовый
+            "rgba(153, 102, 255, 0.7)",  // Фиолетовый
+            "rgba(255, 159, 64, 0.7)",   // Оранжевый
+            "rgba(255, 99, 71, 0.7)",    // Томато
+            "rgba(0, 255, 127, 0.7)",    // Весенний зеленый
+            "rgba(0, 191, 255, 0.7)",    // Глубокий синий
+            "rgba(238, 130, 238, 0.7)",  // Фиалковый
+            "rgba(124, 252, 0, 0.7)",    // Ярко-зеленый
+            "rgba(255, 215, 0, 0.7)"     // Золотой
+        };
+
+        var rand = new Random();
+        var shuffledPalette = palette.OrderBy(_ => rand.Next()).ToList(); // Перемешиваем
+
+        var colors = new List<string>();
+        for (int i = 0; i < count; i++)
+        {
+            colors.Add(shuffledPalette[i % shuffledPalette.Count]);
+        }
+
+        return colors;
+    }
+
+}

@@ -141,6 +141,10 @@
         {
             <p>@Localizer["issue_updated", _selectedIssue.UpdatedAt]</p>
         }
+        @if (_selectedIssue.ResolvedAt != null)
+        {
+            <p>@Localizer["issue_resolved", _selectedIssue.ResolvedAt]</p>
+        }
     </div>
 </div>
 @functions

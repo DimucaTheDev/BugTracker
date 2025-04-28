@@ -573,4 +573,40 @@
   <data name="main_not_exist" xml:space="preserve">
     <value>Эти файлы есть в датабазе, но отсутствуют на сервере: {0}</value>
   </data>
+  <data name="stats_all_proj" xml:space="preserve">
+    <value>Статистика всех проектов</value>
+  </data>
+  <data name="stats_proj" xml:space="preserve">
+    <value>Статистика проекта</value>
+  </data>
+  <data name="stats_all" xml:space="preserve">
+    <value>Все проекты</value>
+  </data>
+  <data name="stats_type" xml:space="preserve">
+    <value>Распределение по типу решения</value>
+  </data>
+  <data name="stats_status" xml:space="preserve">
+    <value>Распределение по статусу</value>
+  </data>
+  <data name="stats_activity" xml:space="preserve">
+    <value>Активность создания задач</value>
+  </data>
+  <data name="stats_created" xml:space="preserve">
+    <value>Создано задач</value>
+  </data>
+  <data name="issue_resolved" xml:space="preserve">
+    <value>Решено: {0}</value>
+  </data>
+  <data name="stats_avg" xml:space="preserve">
+    <value>Среднее время решения задач</value>
+  </data>
+  <data name="stats_days" xml:space="preserve">
+    <value>Дни</value>
+  </data>
+  <data name="stats_count" xml:space="preserve">
+    <value>Количество задач</value>
+  </data>
+  <data name="stats_dev" xml:space="preserve">
+    <value>Нагрузка разработчиков</value>
+  </data>
 </root>
