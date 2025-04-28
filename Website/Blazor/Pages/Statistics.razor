@@ -78,7 +78,7 @@ else
     private void OnProjectSelected(ChangeEventArgs e)
     {
         var selectedCode = e.Value?.ToString();
-
+        
         if (string.IsNullOrWhiteSpace(selectedCode))
         {
             Navigation.NavigateTo("/statistics", !true);

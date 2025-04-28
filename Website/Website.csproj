@@ -21,7 +21,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.4" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="PSC.Blazor.Components.Chartjs" Version="1.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
@@ -61,6 +60,12 @@
 	  <None Remove="salt.txt" />
 	  <None Remove="todo.txt" />
 	  <None Remove="_debug_database.db" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="PSC.Blazor.Components.Chartjs">
+	    <HintPath>..\libs\PSC.Blazor.Components.Chartjs.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 	<PropertyGroup>
 		<UseRazorSourceGenerator>false</UseRazorSourceGenerator>
